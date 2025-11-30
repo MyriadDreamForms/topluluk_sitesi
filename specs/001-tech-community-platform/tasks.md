@@ -3,6 +3,8 @@
 **Input**: Design documents from `/specs/001-tech-community-platform/`
 **Prerequisites**: plan.md ✅, spec.md ✅, research.md ✅, data-model.md ✅, contracts/openapi.yaml ✅
 
+**Total Tasks**: 316 (308 original + 8 remediation tasks)
+
 **Tests**: Test tasks are NOT included (not explicitly requested in specification). Tests can be added later via TDD approach.
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
@@ -88,6 +90,7 @@
 - [ ] T050 [P] Create ForbiddenException in backend/src/TechCommunity.Application/Common/Exceptions/ForbiddenException.cs
 - [ ] T051 [P] Create UnauthorizedException in backend/src/TechCommunity.Application/Common/Exceptions/UnauthorizedException.cs
 - [ ] T052 Implement JwtService in backend/src/TechCommunity.Infrastructure/Services/Identity/JwtService.cs
+- [ ] T052a Configure JWT expiry (30min access, 7day refresh) and session timeout (FR-005) in backend/src/TechCommunity.API/appsettings.json
 - [ ] T053 [P] Implement SlugService (Turkish char support) in backend/src/TechCommunity.Infrastructure/Services/SlugService.cs
 - [ ] T054 [P] Implement MarkdownService in backend/src/TechCommunity.Infrastructure/Services/MarkdownService.cs
 - [ ] T055 [P] Implement CacheService (IMemoryCache) in backend/src/TechCommunity.Infrastructure/Services/Caching/CacheService.cs
@@ -147,6 +150,12 @@
 - [ ] T093 [US1] Create RefreshTokenCommandHandler in backend/src/TechCommunity.Application/Features/Auth/Commands/RefreshToken/RefreshTokenCommandHandler.cs
 - [ ] T094 [P] [US1] Create LogoutCommand in backend/src/TechCommunity.Application/Features/Auth/Commands/Logout/LogoutCommand.cs
 - [ ] T095 [US1] Create LogoutCommandHandler in backend/src/TechCommunity.Application/Features/Auth/Commands/Logout/LogoutCommandHandler.cs
+- [ ] T095a [P] [US1] Create ForgotPasswordCommand in backend/src/TechCommunity.Application/Features/Auth/Commands/ForgotPassword/ForgotPasswordCommand.cs
+- [ ] T095b [P] [US1] Create ForgotPasswordCommandValidator in backend/src/TechCommunity.Application/Features/Auth/Commands/ForgotPassword/ForgotPasswordCommandValidator.cs
+- [ ] T095c [US1] Create ForgotPasswordCommandHandler (generate reset token, send email) in backend/src/TechCommunity.Application/Features/Auth/Commands/ForgotPassword/ForgotPasswordCommandHandler.cs
+- [ ] T095d [P] [US1] Create ResetPasswordCommand in backend/src/TechCommunity.Application/Features/Auth/Commands/ResetPassword/ResetPasswordCommand.cs
+- [ ] T095e [P] [US1] Create ResetPasswordCommandValidator in backend/src/TechCommunity.Application/Features/Auth/Commands/ResetPassword/ResetPasswordCommandValidator.cs
+- [ ] T095f [US1] Create ResetPasswordCommandHandler in backend/src/TechCommunity.Application/Features/Auth/Commands/ResetPassword/ResetPasswordCommandHandler.cs
 - [ ] T096 [P] [US1] Create AuthDto in backend/src/TechCommunity.Application/Features/Auth/DTOs/AuthDto.cs
 - [ ] T097 [US1] Create AuthController in backend/src/TechCommunity.API/Controllers/AuthController.cs
 
@@ -170,6 +179,8 @@
 - [ ] T110 [P] [US1] Create auth routes in frontend/src/app/features/auth/auth.routes.ts
 - [ ] T111 [P] [US1] Create RegisterComponent in frontend/src/app/features/auth/register/register.component.ts
 - [ ] T112 [P] [US1] Create LoginComponent in frontend/src/app/features/auth/login/login.component.ts
+- [ ] T112a [P] [US1] Create ForgotPasswordComponent in frontend/src/app/features/auth/forgot-password/forgot-password.component.ts
+- [ ] T112b [P] [US1] Create ResetPasswordComponent in frontend/src/app/features/auth/reset-password/reset-password.component.ts
 - [ ] T113 [P] [US1] Create auth state signal service in frontend/src/app/features/auth/auth-state.service.ts
 - [ ] T114 [US1] Integrate AuthService with backend API endpoints
 
