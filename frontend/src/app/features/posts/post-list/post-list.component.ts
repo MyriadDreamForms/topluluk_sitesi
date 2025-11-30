@@ -122,7 +122,7 @@ type SortOption = 'latest' | 'popular' | 'trending' | 'oldest';
       } @else {
         <div class="posts-grid">
           @for (post of posts(); track post.id) {
-            <app-post-card [post]="post"></app-post-card>
+            <app-post-card [post]="post" (delete)="onDeletePost($event)"></app-post-card>
           }
         </div>
 
@@ -450,5 +450,19 @@ export class PostListComponent implements OnInit {
     this.currentPage.set(page);
     this.loadPosts();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  onDeletePost(post: Post): void {
+    this.postsService.deletePost(post.id).subscribe({
+      next: () => {
+        // Remove from current list
+        this.posts.update(posts => posts.filter(p => p.id !== post.id));
+        this.totalCount.update(count => count - 1);
+      },
+      error: (err) => {
+        console.error('Failed to delete post:', err);
+        alert('Yazı silinirken bir hata oluştu.');
+      }
+    });
   }
 }

@@ -33,6 +33,7 @@ export interface Post {
   publishedAt?: string;
   author: PostAuthor;
   tags: PostTag[];
+  isAuthor?: boolean;
 }
 
 export interface PostDetail extends Post {
@@ -304,8 +305,18 @@ export class PostsService {
 
   private getMockPosts(params: PostsQueryParams): Observable<PaginatedResponse<Post>> {
     // Combine user-created posts with mock posts
-    const createdPosts = this.getCreatedPosts().filter(p => p.isPublished);
-    let filtered = [...createdPosts, ...MOCK_POSTS];
+    const currentUser = this.authService.currentUser();
+    const createdPosts = this.getCreatedPosts()
+      .filter(p => p.isPublished)
+      .map(p => ({ ...p, isAuthor: p.author?.username === currentUser?.username }));
+    
+    // Mark mock posts with isAuthor based on current user
+    const mockPostsWithAuthor = MOCK_POSTS.map(p => ({
+      ...p,
+      isAuthor: p.author?.username === currentUser?.username
+    }));
+    
+    let filtered = [...createdPosts, ...mockPostsWithAuthor];
 
     // Search filter
     if (params.search) {
@@ -491,7 +502,25 @@ export class PostsService {
 
   deletePost(id: string): Observable<void> {
     return this.http.delete<ApiResponse<void>>(`${this.baseUrl}/${id}`)
-      .pipe(map(() => undefined));
+      .pipe(
+        map(() => undefined),
+        catchError(() => {
+          // Also remove from localStorage
+          this.removeCreatedPost(id);
+          return of(undefined).pipe(delay(300));
+        })
+      );
+  }
+
+  // Remove post from localStorage
+  private removeCreatedPost(id: string): void {
+    try {
+      const posts = this.getCreatedPosts();
+      const filtered = posts.filter(p => p.id !== id);
+      localStorage.setItem(this.CREATED_POSTS_KEY, JSON.stringify(filtered));
+    } catch {
+      // Ignore errors
+    }
   }
 
   getMyPosts(params: PostsQueryParams = {}): Observable<PaginatedResponse<Post>> {

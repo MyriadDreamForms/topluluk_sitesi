@@ -177,8 +177,18 @@ export class ProfileService {
 
   private getMockProfile(username: string): Observable<UserProfile> {
     const profile = this.mockProfiles.find(p => p.username.toLowerCase() === username.toLowerCase());
+    
+    // Get actual counts from localStorage
+    const counts = this.getActualContentCounts(username);
+    
     if (profile) {
-      return of(profile).pipe(delay(500));
+      return of({
+        ...profile,
+        postsCount: counts.posts,
+        questionsCount: counts.questions,
+        answersCount: counts.answers,
+        reputation: 0
+      }).pipe(delay(500));
     }
     // Generate a dynamic mock profile for any username
     const dynamicProfile: UserProfile = {
@@ -190,12 +200,41 @@ export class ProfileService {
       role: 'User',
       createdAt: '2024-06-01T10:00:00Z',
       location: 'Türkiye',
-      postsCount: Math.floor(Math.random() * 20),
-      questionsCount: Math.floor(Math.random() * 15),
-      answersCount: Math.floor(Math.random() * 30),
-      reputation: Math.floor(Math.random() * 500) + 100
+      postsCount: counts.posts,
+      questionsCount: counts.questions,
+      answersCount: counts.answers,
+      reputation: 0
     };
     return of(dynamicProfile).pipe(delay(500));
+  }
+
+  private getActualContentCounts(username: string): { posts: number; questions: number; answers: number } {
+    let posts = 0;
+    let questions = 0;
+    let answers = 0;
+
+    try {
+      // Count posts from localStorage
+      const storedPosts = localStorage.getItem('created_posts');
+      if (storedPosts) {
+        const postsArray = JSON.parse(storedPosts);
+        posts = postsArray.filter((p: any) => p.author?.username === username).length;
+      }
+
+      // Count questions from localStorage
+      const storedQuestions = localStorage.getItem('created_questions');
+      if (storedQuestions) {
+        const questionsArray = JSON.parse(storedQuestions);
+        questions = questionsArray.filter((q: any) => q.author?.username === username).length;
+      }
+
+      // Answers would come from a similar storage if implemented
+      // For now, keep answers at 0
+    } catch {
+      // If parsing fails, return 0s
+    }
+
+    return { posts, questions, answers };
   }
 
   /**

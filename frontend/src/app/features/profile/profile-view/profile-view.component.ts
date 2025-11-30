@@ -148,10 +148,6 @@ type TabType = 'posts' | 'questions' | 'answers';
             <span class="stat-value">{{ profile()!.answersCount }}</span>
             <span class="stat-label">Cevap</span>
           </div>
-          <div class="stat-card">
-            <span class="stat-value">{{ profile()!.reputation }}</span>
-            <span class="stat-label">Puan</span>
-          </div>
         </div>
         
         <div class="profile-content">

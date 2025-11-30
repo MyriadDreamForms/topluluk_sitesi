@@ -152,17 +152,18 @@ import { AnswerFormComponent } from '../answer-form/answer-form.component';
     .error-message {
       text-align: center;
       padding: 4rem 2rem;
-      color: var(--text-secondary, #6b7280);
+      color: var(--text-muted, #94a3b8);
     }
 
     .error-message svg {
       margin-bottom: 1rem;
       opacity: 0.5;
+      color: var(--text-muted, #64748b);
     }
 
     .error-message h2 {
       font-size: 1.5rem;
-      color: var(--text-primary, #1f2937);
+      color: var(--text-primary, #f8fafc);
       margin: 0 0 0.5rem;
     }
 
@@ -175,18 +176,23 @@ import { AnswerFormComponent } from '../answer-form/answer-form.component';
       align-items: center;
       gap: 0.5rem;
       padding: 0.75rem 1.5rem;
-      background: var(--primary-color, #3b82f6);
+      background: linear-gradient(135deg, #ff6d5a 0%, #ff5142 100%);
       color: white;
       border: none;
       border-radius: 8px;
       font-weight: 600;
       text-decoration: none;
       cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 0 20px rgba(255, 109, 90, 0.4);
     }
 
     .question {
-      background: var(--card-bg, #fff);
-      border: 1px solid var(--border-color, #e5e7eb);
+      background: var(--bg-secondary, #17171c);
+      border: 1px solid var(--border-color, #2a2a35);
       border-radius: 12px;
       padding: 1.5rem;
       margin-bottom: 2rem;
@@ -201,7 +207,7 @@ import { AnswerFormComponent } from '../answer-form/answer-form.component';
       font-weight: 700;
       line-height: 1.3;
       margin: 0 0 1rem;
-      color: var(--text-primary, #1f2937);
+      color: var(--text-primary, #f8fafc);
     }
 
     .question-meta {
@@ -210,7 +216,7 @@ import { AnswerFormComponent } from '../answer-form/answer-form.component';
       flex-wrap: wrap;
       gap: 0.5rem;
       font-size: 0.875rem;
-      color: var(--text-secondary, #6b7280);
+      color: var(--text-muted, #94a3b8);
     }
 
     .author-link {
@@ -222,11 +228,11 @@ import { AnswerFormComponent } from '../answer-form/answer-form.component';
     }
 
     .author-link:hover .author-name {
-      color: var(--primary-color, #3b82f6);
+      color: #ff6d5a;
     }
 
     .separator {
-      color: var(--border-color, #e5e7eb);
+      color: var(--border-color, #2a2a35);
     }
 
     .edited {
@@ -241,11 +247,11 @@ import { AnswerFormComponent } from '../answer-form/answer-form.component';
 
     .btn-icon {
       padding: 0.5rem;
-      background: var(--card-bg, #fff);
-      border: 1px solid var(--border-color, #e5e7eb);
+      background: var(--bg-tertiary, #1f1f28);
+      border: 1px solid var(--border-color, #2a2a35);
       border-radius: 8px;
       cursor: pointer;
-      color: var(--text-secondary, #6b7280);
+      color: var(--text-muted, #94a3b8);
       transition: all 0.2s;
       text-decoration: none;
       display: flex;
@@ -254,17 +260,21 @@ import { AnswerFormComponent } from '../answer-form/answer-form.component';
     }
 
     .btn-icon:hover {
-      color: var(--primary-color, #3b82f6);
-      border-color: var(--primary-color, #3b82f6);
+      color: #ff6d5a;
+      border-color: #ff6d5a;
+      background: rgba(255, 109, 90, 0.1);
     }
 
     .btn-icon.danger:hover {
       color: #ef4444;
       border-color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
     }
 
     .question-body {
       margin-bottom: 1.5rem;
+      color: var(--text-primary, #e0e0e0);
+      line-height: 1.7;
     }
 
     .answers-section {
@@ -278,13 +288,14 @@ import { AnswerFormComponent } from '../answer-form/answer-form.component';
       display: flex;
       align-items: center;
       gap: 0.75rem;
+      color: var(--text-primary, #f8fafc);
     }
 
     .accepted-badge {
       font-size: 0.75rem;
       font-weight: 600;
-      color: var(--success-color, #22c55e);
-      background: rgba(34, 197, 94, 0.1);
+      color: #4ade80;
+      background: rgba(74, 222, 128, 0.1);
       padding: 0.25rem 0.5rem;
       border-radius: 4px;
     }
@@ -292,19 +303,19 @@ import { AnswerFormComponent } from '../answer-form/answer-form.component';
     .login-prompt {
       text-align: center;
       padding: 2rem;
-      background: var(--card-bg, #fff);
-      border: 1px solid var(--border-color, #e5e7eb);
+      background: var(--bg-secondary, #17171c);
+      border: 1px solid var(--border-color, #2a2a35);
       border-radius: 8px;
       margin-top: 1.5rem;
     }
 
     .login-prompt p {
       margin: 0;
-      color: var(--text-secondary, #6b7280);
+      color: var(--text-muted, #94a3b8);
     }
 
     .login-prompt a {
-      color: var(--primary-color, #3b82f6);
+      color: #ff6d5a;
       text-decoration: none;
       font-weight: 500;
     }

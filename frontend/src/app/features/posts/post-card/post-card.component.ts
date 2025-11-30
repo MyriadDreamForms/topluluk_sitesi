@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Post } from '../posts.service';
@@ -26,6 +26,35 @@ import { TimeAgoPipe } from '../../../shared/pipes/time-ago.pipe';
           @if (post.isFeatured) {
             <span class="featured-badge">Öne Çıkan</span>
           }
+          @if (post.isAuthor) {
+            <div class="author-actions">
+              <a [routerLink]="['/posts', post.slug, 'edit']" class="action-btn edit-btn" title="Düzenle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+                </svg>
+              </a>
+              <button class="action-btn delete-btn" title="Sil" (click)="onDeleteClick($event)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+              </button>
+            </div>
+          }
+        </div>
+      } @else if (post.isAuthor) {
+        <div class="author-actions no-cover">
+          <a [routerLink]="['/posts', post.slug, 'edit']" class="action-btn edit-btn" title="Düzenle">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+            </svg>
+          </a>
+          <button class="action-btn delete-btn" title="Sil" (click)="onDeleteClick($event)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            </svg>
+          </button>
         </div>
       }
       
@@ -129,6 +158,60 @@ import { TimeAgoPipe } from '../../../shared/pipes/time-ago.pipe';
       border-radius: 6px;
     }
 
+    .author-actions {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      display: flex;
+      gap: 0.5rem;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .author-actions.no-cover {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      left: auto;
+    }
+
+    .post-card:hover .author-actions {
+      opacity: 1;
+    }
+
+    .action-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .edit-btn {
+      background: rgba(59, 130, 246, 0.9);
+      color: white;
+    }
+
+    .edit-btn:hover {
+      background: #3b82f6;
+      transform: scale(1.1);
+    }
+
+    .delete-btn {
+      background: rgba(239, 68, 68, 0.9);
+      color: white;
+    }
+
+    .delete-btn:hover {
+      background: #ef4444;
+      transform: scale(1.1);
+    }
+
     .post-content {
       padding: 1.25rem;
     }
@@ -210,4 +293,13 @@ import { TimeAgoPipe } from '../../../shared/pipes/time-ago.pipe';
 })
 export class PostCardComponent {
   @Input({ required: true }) post!: Post;
+  @Output() delete = new EventEmitter<Post>();
+
+  onDeleteClick(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    if (confirm(`"${this.post.title}" yazısını silmek istediğinize emin misiniz?`)) {
+      this.delete.emit(this.post);
+    }
+  }
 }

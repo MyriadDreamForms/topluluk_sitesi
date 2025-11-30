@@ -13,6 +13,7 @@ import { marked } from 'marked';
   styles: [`
     .markdown-content {
       line-height: 1.7;
+      color: var(--text-primary, #e0e0e0);
       
       :host ::ng-deep {
         h1, h2, h3, h4, h5, h6 {
@@ -20,20 +21,23 @@ import { marked } from 'marked';
           margin-bottom: 0.5em;
           font-weight: 600;
           line-height: 1.3;
+          color: var(--text-primary, #f8fafc);
         }
         
-        h1 { font-size: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.3em; }
-        h2 { font-size: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.3em; }
+        h1 { font-size: 2rem; border-bottom: 1px solid var(--border-color, #2a2a35); padding-bottom: 0.3em; }
+        h2 { font-size: 1.5rem; border-bottom: 1px solid var(--border-color, #2a2a35); padding-bottom: 0.3em; }
         h3 { font-size: 1.25rem; }
         h4 { font-size: 1rem; }
         
         p {
           margin-bottom: 1em;
+          color: var(--text-primary, #e0e0e0);
         }
         
         a {
-          color: var(--primary-color);
+          color: #ff6d5a;
           text-decoration: none;
+          word-break: break-all;
           
           &:hover {
             text-decoration: underline;
@@ -41,7 +45,8 @@ import { marked } from 'marked';
         }
         
         code {
-          background-color: var(--bg-tertiary);
+          background-color: var(--bg-tertiary, #1f1f28);
+          color: #ff6d5a;
           padding: 0.2em 0.4em;
           border-radius: 4px;
           font-family: 'JetBrains Mono', 'Fira Code', monospace;
@@ -49,24 +54,26 @@ import { marked } from 'marked';
         }
         
         pre {
-          background-color: var(--bg-tertiary);
+          background-color: var(--bg-tertiary, #1f1f28);
           padding: 1rem;
           border-radius: 8px;
           overflow-x: auto;
           margin: 1em 0;
+          border: 1px solid var(--border-color, #2a2a35);
           
           code {
             background: none;
             padding: 0;
+            color: var(--text-primary, #e0e0e0);
           }
         }
         
         blockquote {
-          border-left: 4px solid var(--primary-color);
+          border-left: 4px solid #ff6d5a;
           margin: 1em 0;
           padding: 0.5em 1em;
-          background-color: var(--bg-secondary);
-          color: var(--text-secondary);
+          background-color: var(--bg-secondary, #17171c);
+          color: var(--text-muted, #94a3b8);
           
           p:last-child {
             margin-bottom: 0;
@@ -76,6 +83,7 @@ import { marked } from 'marked';
         ul, ol {
           margin: 1em 0;
           padding-left: 2em;
+          color: var(--text-primary, #e0e0e0);
           
           li {
             margin-bottom: 0.5em;
@@ -88,18 +96,19 @@ import { marked } from 'marked';
           margin: 1em 0;
           
           th, td {
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border-color, #2a2a35);
             padding: 0.5em 1em;
             text-align: left;
+            color: var(--text-primary, #e0e0e0);
           }
           
           th {
-            background-color: var(--bg-secondary);
+            background-color: var(--bg-secondary, #17171c);
             font-weight: 600;
           }
           
           tr:nth-child(even) {
-            background-color: var(--bg-secondary);
+            background-color: var(--bg-secondary, #17171c);
           }
         }
         
@@ -112,7 +121,7 @@ import { marked } from 'marked';
         
         hr {
           border: none;
-          border-top: 1px solid var(--border-color);
+          border-top: 1px solid var(--border-color, #2a2a35);
           margin: 2em 0;
         }
         
