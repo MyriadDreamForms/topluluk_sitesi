@@ -68,6 +68,9 @@ import { AuthService } from '../../../core/services/auth.service';
                     <a routerLink="/profile" class="dropdown-item" (click)="closeUserMenu()">
                       Profilim
                     </a>
+                    <a routerLink="/profile/events" class="dropdown-item" (click)="closeUserMenu()">
+                      📅 Etkinliklerim
+                    </a>
                     <a routerLink="/posts/new" class="dropdown-item" (click)="closeUserMenu()">
                       Yeni Yazı
                     </a>

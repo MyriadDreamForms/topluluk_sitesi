@@ -61,6 +61,22 @@ export interface EventsResponse {
 export class EventsService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${environment.apiUrl}/events`;
+  private readonly REGISTRATIONS_KEY = 'event_registrations';
+
+  // Get registered event IDs from localStorage
+  private getRegisteredEventIds(): Set<string> {
+    try {
+      const stored = localStorage.getItem(this.REGISTRATIONS_KEY);
+      return stored ? new Set(JSON.parse(stored)) : new Set();
+    } catch {
+      return new Set();
+    }
+  }
+
+  // Save registered event IDs to localStorage
+  private saveRegisteredEventIds(ids: Set<string>): void {
+    localStorage.setItem(this.REGISTRATIONS_KEY, JSON.stringify([...ids]));
+  }
 
   private readonly mockEvents: EventDetailDto[] = [
     {
@@ -337,7 +353,13 @@ export class EventsService {
    */
   registerForEvent(eventId: string): Observable<{ success: boolean; message: string }> {
     return this.http.post<{ success: boolean; message: string }>(`${this.baseUrl}/${eventId}/register`, {}).pipe(
-      catchError(() => of({ success: true, message: 'Etkinliğe başarıyla kayıt oldunuz!' }).pipe(delay(500)))
+      catchError(() => {
+        // Mock: Save to localStorage
+        const registeredIds = this.getRegisteredEventIds();
+        registeredIds.add(eventId);
+        this.saveRegisteredEventIds(registeredIds);
+        return of({ success: true, message: 'Etkinliğe başarıyla kayıt oldunuz!' }).pipe(delay(500));
+      })
     );
   }
 
@@ -346,7 +368,13 @@ export class EventsService {
    */
   cancelRegistration(eventId: string): Observable<{ success: boolean; message: string }> {
     return this.http.delete<{ success: boolean; message: string }>(`${this.baseUrl}/${eventId}/register`).pipe(
-      catchError(() => of({ success: true, message: 'Kayıt iptal edildi.' }).pipe(delay(300)))
+      catchError(() => {
+        // Mock: Remove from localStorage
+        const registeredIds = this.getRegisteredEventIds();
+        registeredIds.delete(eventId);
+        this.saveRegisteredEventIds(registeredIds);
+        return of({ success: true, message: 'Kayıt iptal edildi.' }).pipe(delay(300));
+      })
     );
   }
 
@@ -355,7 +383,25 @@ export class EventsService {
    */
   checkRegistration(eventId: string): Observable<{ isRegistered: boolean }> {
     return this.http.get<{ isRegistered: boolean }>(`${this.baseUrl}/${eventId}/registration`).pipe(
-      catchError(() => of({ isRegistered: false }).pipe(delay(200)))
+      catchError(() => {
+        // Mock: Check localStorage
+        const registeredIds = this.getRegisteredEventIds();
+        return of({ isRegistered: registeredIds.has(eventId) }).pipe(delay(200));
+      })
+    );
+  }
+
+  /**
+   * Get all events the current user is registered for
+   */
+  getMyRegisteredEvents(): Observable<EventDetailDto[]> {
+    return this.http.get<EventDetailDto[]>(`${this.baseUrl}/my-registrations`).pipe(
+      catchError(() => {
+        // Mock: Get events from localStorage registrations
+        const registeredIds = this.getRegisteredEventIds();
+        const registeredEvents = this.mockEvents.filter(e => registeredIds.has(e.id));
+        return of(registeredEvents).pipe(delay(300));
+      })
     );
   }
 

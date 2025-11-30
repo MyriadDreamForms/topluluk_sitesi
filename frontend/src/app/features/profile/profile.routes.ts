@@ -8,5 +8,10 @@ export const PROFILE_ROUTES: Routes = [
   {
     path: 'settings',
     loadComponent: () => import('./profile-edit/profile-edit.component').then(m => m.ProfileEditComponent),
+  },
+  {
+    path: 'events',
+    loadComponent: () => import('./my-events/my-events.component').then(m => m.MyEventsComponent),
+    title: 'Kayıtlı Etkinliklerim | TechCommunity'
   }
 ];

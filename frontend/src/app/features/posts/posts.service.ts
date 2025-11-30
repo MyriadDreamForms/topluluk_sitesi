@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError, delay } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { AuthService } from '../../core/services/auth.service';
 
 export interface PostAuthor {
   id: string;
@@ -242,7 +243,32 @@ const MOCK_POSTS: Post[] = [
 })
 export class PostsService {
   private readonly http = inject(HttpClient);
+  private readonly authService = inject(AuthService);
   private readonly baseUrl = `${environment.apiUrl}/posts`;
+  private readonly CREATED_POSTS_KEY = 'created_posts';
+
+  // Get user-created posts from localStorage
+  private getCreatedPosts(): PostDetail[] {
+    try {
+      const stored = localStorage.getItem(this.CREATED_POSTS_KEY);
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  // Save created post to localStorage
+  private saveCreatedPost(post: PostDetail): void {
+    const posts = this.getCreatedPosts();
+    // Add or update post
+    const existingIndex = posts.findIndex(p => p.id === post.id);
+    if (existingIndex >= 0) {
+      posts[existingIndex] = post;
+    } else {
+      posts.unshift(post);
+    }
+    localStorage.setItem(this.CREATED_POSTS_KEY, JSON.stringify(posts));
+  }
 
   getPosts(params: PostsQueryParams = {}): Observable<PaginatedResponse<Post>> {
     let httpParams = new HttpParams();
@@ -277,7 +303,9 @@ export class PostsService {
   }
 
   private getMockPosts(params: PostsQueryParams): Observable<PaginatedResponse<Post>> {
-    let filtered = [...MOCK_POSTS];
+    // Combine user-created posts with mock posts
+    const createdPosts = this.getCreatedPosts().filter(p => p.isPublished);
+    let filtered = [...createdPosts, ...MOCK_POSTS];
 
     // Search filter
     if (params.search) {
@@ -336,6 +364,14 @@ export class PostsService {
       .pipe(
         map(response => response.data),
         catchError(() => {
+          // First check user-created posts in localStorage
+          const createdPosts = this.getCreatedPosts();
+          const createdPost = createdPosts.find(p => p.slug === slug);
+          if (createdPost) {
+            return of(createdPost).pipe(delay(300));
+          }
+
+          // Then check mock posts
           const post = MOCK_POSTS.find(p => p.slug === slug);
           if (post) {
             return of({
@@ -367,6 +403,8 @@ export class PostsService {
       .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
       .substring(0, 100) + '-' + Date.now();
 
+    const currentUser = this.authService.currentUser();
+
     const mockPost: PostDetail = {
       id: 'mock-' + Date.now(),
       title: request.title,
@@ -382,10 +420,10 @@ export class PostsService {
       createdAt: new Date().toISOString(),
       publishedAt: request.isPublished ? new Date().toISOString() : undefined,
       author: {
-        id: 'current-user',
-        username: 'kullanici',
-        displayName: 'Demo Kullanıcı',
-        avatarUrl: null
+        id: currentUser?.id || 'current-user',
+        username: currentUser?.username || 'kullanici',
+        displayName: currentUser?.displayName || 'Demo Kullanıcı',
+        avatarUrl: currentUser?.avatarUrl || null
       },
       tags: request.tagNames.map((name, i) => ({
         id: `tag-${i}`,
@@ -395,6 +433,9 @@ export class PostsService {
       isAuthor: true,
       hasLiked: false
     };
+
+    // Save to localStorage for persistence
+    this.saveCreatedPost(mockPost);
 
     return of(mockPost).pipe(delay(800));
   }
@@ -409,23 +450,25 @@ export class PostsService {
 
   private mockUpdatePost(id: string, request: UpdatePostRequest): Observable<PostDetail> {
     const existingPost = MOCK_POSTS.find(p => p.id === id);
+    const createdPosts = this.getCreatedPosts();
+    const createdPost = createdPosts.find(p => p.id === id);
     
     const mockPost: PostDetail = {
       id: id,
       title: request.title,
-      slug: existingPost?.slug || id,
+      slug: createdPost?.slug || existingPost?.slug || id,
       content: request.content,
       excerpt: request.excerpt || request.content.substring(0, 200) + '...',
       coverImageUrl: request.coverImageUrl,
       isFeatured: existingPost?.isFeatured || false,
       isPublished: request.isPublished ?? false,
-      viewCount: existingPost?.viewCount || 0,
-      likeCount: existingPost?.likeCount || 0,
-      commentCount: existingPost?.commentCount || 0,
-      createdAt: existingPost?.createdAt || new Date().toISOString(),
+      viewCount: createdPost?.viewCount || existingPost?.viewCount || 0,
+      likeCount: createdPost?.likeCount || existingPost?.likeCount || 0,
+      commentCount: createdPost?.commentCount || existingPost?.commentCount || 0,
+      createdAt: createdPost?.createdAt || existingPost?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       publishedAt: request.isPublished ? new Date().toISOString() : undefined,
-      author: existingPost?.author || {
+      author: createdPost?.author || existingPost?.author || {
         id: 'current-user',
         username: 'kullanici',
         displayName: 'Demo Kullanıcı',
@@ -439,6 +482,9 @@ export class PostsService {
       isAuthor: true,
       hasLiked: false
     };
+
+    // Save to localStorage for persistence
+    this.saveCreatedPost(mockPost);
 
     return of(mockPost).pipe(delay(600));
   }

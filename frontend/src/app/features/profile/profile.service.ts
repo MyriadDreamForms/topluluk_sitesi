@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, map, of, delay, catchError } from 'rxjs';
+import { Observable, map, of, delay, catchError, forkJoin } from 'rxjs';
 import { ApiService, ApiResponse } from '../../core/services/api.service';
 
 export interface UserProfile {
@@ -234,6 +234,111 @@ export class ProfileService {
     return this.api.post<{ avatarUrl: string }>('/api/users/avatar', formData).pipe(
       map(response => response.data)
     );
+  }
+
+  /**
+   * Get user's activity by type (posts, questions, answers)
+   */
+  getUserActivityByType(username: string, type: 'posts' | 'questions' | 'answers', page: number = 1, pageSize: number = 10): Observable<UserActivityResponse> {
+    const endpoint = type === 'answers' 
+      ? `/api/users/${username}/answers`
+      : type === 'questions' 
+        ? `/api/questions`
+        : `/api/posts`;
+
+    const params: any = { pageNumber: page, pageSize };
+    if (type !== 'answers') {
+      params.authorUsername = username;
+    }
+
+    return this.api.getPaginated<any>(endpoint, params).pipe(
+      map(response => {
+        const activityType: 'post' | 'question' | 'answer' = type === 'posts' ? 'post' : type === 'questions' ? 'question' : 'answer';
+        const items: UserActivity[] = response.data.items.map((item: any) => ({
+          id: item.id,
+          type: activityType,
+          title: item.title,
+          slug: item.slug,
+          createdAt: item.createdAt,
+          excerpt: item.excerpt || item.content?.substring(0, 150) + '...'
+        }));
+        return {
+          items,
+          pageNumber: response.data.pageNumber,
+          pageSize: response.data.pageSize,
+          totalCount: response.data.totalCount,
+          totalPages: response.data.totalPages
+        } as UserActivityResponse;
+      }),
+      catchError(() => this.getMockActivityByType(username, type, page, pageSize))
+    );
+  }
+
+  private getMockActivityByType(username: string, type: 'posts' | 'questions' | 'answers', page: number, pageSize: number): Observable<UserActivityResponse> {
+    // Get from localStorage created_posts for posts
+    let items: UserActivity[] = [];
+    const activityType: 'post' | 'question' | 'answer' = type === 'posts' ? 'post' : type === 'questions' ? 'question' : 'answer';
+    
+    if (type === 'posts') {
+      // Check localStorage for user-created posts
+      try {
+        const storedPosts = localStorage.getItem('created_posts');
+        if (storedPosts) {
+          const posts = JSON.parse(storedPosts);
+          items = posts
+            .filter((p: any) => p.author?.username === username || username === 'kullanici' || username === 'admin123')
+            .map((p: any): UserActivity => ({
+              id: p.id,
+              type: 'post',
+              title: p.title,
+              slug: p.slug,
+              createdAt: p.createdAt,
+              excerpt: p.excerpt || p.content?.substring(0, 150) + '...'
+            }));
+        }
+      } catch { }
+      
+      // If no posts found, add mock posts for demo
+      if (items.length === 0) {
+        items = this.mockActivities.filter(a => a.type === 'post');
+      }
+    } else if (type === 'questions') {
+      // Check localStorage for user-created questions
+      try {
+        const storedQuestions = localStorage.getItem('created_questions');
+        if (storedQuestions) {
+          const questions = JSON.parse(storedQuestions);
+          items = questions
+            .filter((q: any) => q.author?.username === username || username === 'kullanici' || username === 'admin123')
+            .map((q: any): UserActivity => ({
+              id: q.id,
+              type: 'question',
+              title: q.title,
+              slug: q.slug,
+              createdAt: q.createdAt,
+              excerpt: q.bodyPreview || q.body?.substring(0, 150) + '...'
+            }));
+        }
+      } catch { }
+      
+      if (items.length === 0) {
+        items = this.mockActivities.filter(a => a.type === 'question');
+      }
+    } else {
+      items = this.mockActivities.filter(a => a.type === 'answer');
+    }
+    
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize;
+    const paginatedItems = items.slice(start, end);
+    
+    return of({
+      items: paginatedItems,
+      pageNumber: page,
+      pageSize: pageSize,
+      totalCount: items.length,
+      totalPages: Math.ceil(items.length / pageSize) || 1
+    }).pipe(delay(300));
   }
 
   /**

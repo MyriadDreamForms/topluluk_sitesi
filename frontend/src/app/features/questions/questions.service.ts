@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError, delay } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { AuthService } from '../../core/services/auth.service';
 
 export interface QuestionAuthor {
   id: string;
@@ -237,7 +238,32 @@ const MOCK_QUESTIONS: Question[] = [
 })
 export class QuestionsService {
   private readonly http = inject(HttpClient);
+  private readonly authService = inject(AuthService);
   private readonly baseUrl = `${environment.apiUrl}/questions`;
+  private readonly CREATED_QUESTIONS_KEY = 'created_questions';
+
+  // Get user-created questions from localStorage
+  private getCreatedQuestions(): QuestionDetail[] {
+    try {
+      const stored = localStorage.getItem(this.CREATED_QUESTIONS_KEY);
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  // Save created question to localStorage
+  private saveCreatedQuestion(question: QuestionDetail): void {
+    const questions = this.getCreatedQuestions();
+    // Add or update question
+    const existingIndex = questions.findIndex(q => q.id === question.id);
+    if (existingIndex >= 0) {
+      questions[existingIndex] = question;
+    } else {
+      questions.unshift(question);
+    }
+    localStorage.setItem(this.CREATED_QUESTIONS_KEY, JSON.stringify(questions));
+  }
 
   getQuestions(params: QuestionsQueryParams = {}): Observable<PaginatedResponse<Question>> {
     let httpParams = new HttpParams();
@@ -272,7 +298,18 @@ export class QuestionsService {
   }
 
   private getMockQuestions(params: QuestionsQueryParams): Observable<PaginatedResponse<Question>> {
-    let filtered = [...MOCK_QUESTIONS];
+    // Combine user-created questions with mock questions
+    const createdQuestions = this.getCreatedQuestions();
+    let filtered = [...createdQuestions, ...MOCK_QUESTIONS];
+
+    // Author filter - only show questions from specific user
+    if (params.authorUsername) {
+      filtered = filtered.filter(q => 
+        q.author?.username === params.authorUsername || 
+        (params.authorUsername === 'kullanici' && q.author?.username === 'kullanici') ||
+        (params.authorUsername === 'admin123' && q.author?.username === 'admin123')
+      );
+    }
 
     // Search filter
     if (params.search) {
@@ -332,6 +369,14 @@ export class QuestionsService {
       .pipe(
         map(response => response.data),
         catchError(() => {
+          // First check user-created questions in localStorage
+          const createdQuestions = this.getCreatedQuestions();
+          const createdQuestion = createdQuestions.find(q => q.slug === slug);
+          if (createdQuestion) {
+            return of(createdQuestion).pipe(delay(300));
+          }
+
+          // Then check mock questions
           const question = MOCK_QUESTIONS.find(q => q.slug === slug);
           if (question) {
             return of({
@@ -362,8 +407,40 @@ export class QuestionsService {
       .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
       .substring(0, 100) + '-' + Date.now();
 
+    const questionId = 'mock-' + Date.now();
+    const currentUser = this.authService.currentUser();
+
+    // Create full question detail for localStorage
+    const mockQuestion: QuestionDetail = {
+      id: questionId,
+      title: request.title,
+      slug: slug,
+      body: request.body,
+      bodyPreview: request.body.substring(0, 200) + (request.body.length > 200 ? '...' : ''),
+      viewCount: 0,
+      answerCount: 0,
+      hasAcceptedAnswer: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: undefined,
+      author: {
+        id: currentUser?.id || 'current-user',
+        username: currentUser?.username || 'current_user',
+        displayName: currentUser?.displayName || 'Mevcut Kullanıcı',
+        avatarUrl: currentUser?.avatarUrl || null
+      },
+      tags: request.tagNames.map((name: string, index: number) => ({
+        id: `tag-${index}`,
+        name: name,
+        slug: name.toLowerCase().replace(/\s+/g, '-')
+      })),
+      isAuthor: true
+    };
+
+    // Save to localStorage for persistence
+    this.saveCreatedQuestion(mockQuestion);
+
     return of({ 
-      id: 'mock-' + Date.now(),
+      id: questionId,
       slug: slug
     }).pipe(delay(800));
   }
