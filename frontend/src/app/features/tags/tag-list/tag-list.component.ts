@@ -118,11 +118,11 @@ interface Tag {
       font-size: 1.75rem;
       font-weight: 700;
       margin: 0 0 0.5rem;
-      color: var(--text-primary, #ffffff);
+      color: #f8fafc;
     }
 
     .page-desc {
-      color: var(--text-muted, #8a8a8a);
+      color: #94a3b8;
       font-size: 1rem;
       margin: 0;
     }
@@ -140,8 +140,8 @@ interface Tag {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      background: var(--bg-secondary, #17171c);
-      border: 1px solid var(--border-color, #2a2a35);
+      background: #17171c;
+      border: 1px solid #2a2a35;
       border-radius: 10px;
       padding: 0.5rem 0.75rem;
       flex: 1;
@@ -151,12 +151,13 @@ interface Tag {
 
     .search-box:focus-within {
       border-color: #ff6d5a;
+      box-shadow: 0 0 0 3px rgba(255, 109, 90, 0.1);
     }
 
     .search-icon {
       width: 16px;
       height: 16px;
-      color: var(--text-muted, #8a8a8a);
+      color: #94a3b8;
       flex-shrink: 0;
     }
 
@@ -166,11 +167,11 @@ interface Tag {
       border: none;
       outline: none;
       font-size: 0.875rem;
-      color: var(--text-primary, #ffffff);
+      color: #f8fafc;
     }
 
     .search-input::placeholder {
-      color: var(--text-muted, #8a8a8a);
+      color: #64748b;
     }
 
     .sort-options {
@@ -180,8 +181,8 @@ interface Tag {
 
     .sort-btn {
       background: transparent;
-      border: 1px solid var(--border-color, #2a2a35);
-      color: var(--text-muted, #8a8a8a);
+      border: 1px solid #2a2a35;
+      color: #94a3b8;
       padding: 0.5rem 1rem;
       border-radius: 8px;
       font-size: 0.875rem;
@@ -190,8 +191,8 @@ interface Tag {
     }
 
     .sort-btn:hover {
-      border-color: var(--text-muted);
-      color: var(--text-primary);
+      border-color: #64748b;
+      color: #f8fafc;
     }
 
     .sort-btn.active {
@@ -213,8 +214,8 @@ interface Tag {
     }
 
     .tag-card {
-      background: var(--bg-secondary, #17171c);
-      border: 1px solid var(--border-color, #2a2a35);
+      background: #17171c;
+      border: 1px solid #2a2a35;
       border-radius: 12px;
       padding: 1.25rem;
       text-decoration: none;
@@ -238,7 +239,7 @@ interface Tag {
 
     .tag-description {
       font-size: 0.875rem;
-      color: var(--text-muted, #8a8a8a);
+      color: #94a3b8;
       margin: 0 0 1rem;
       line-height: 1.5;
       display: -webkit-box;
@@ -251,19 +252,19 @@ interface Tag {
       display: flex;
       gap: 1rem;
       font-size: 0.8rem;
-      color: var(--text-light, #6a6a6a);
+      color: #64748b;
     }
 
     .tag-stats strong {
-      color: var(--text-primary, #ffffff);
+      color: #f8fafc;
     }
 
     .empty-state {
       grid-column: 1 / -1;
       text-align: center;
       padding: 4rem 2rem;
-      background: var(--bg-secondary, #17171c);
-      border: 1px solid var(--border-color, #2a2a35);
+      background: #17171c;
+      border: 1px solid #2a2a35;
       border-radius: 12px;
     }
 
@@ -274,12 +275,12 @@ interface Tag {
 
     .empty-state h3 {
       font-size: 1.25rem;
-      color: var(--text-primary, #ffffff);
+      color: #f8fafc;
       margin: 0 0 0.5rem;
     }
 
     .empty-state p {
-      color: var(--text-muted, #8a8a8a);
+      color: #94a3b8;
       margin: 0;
     }
 

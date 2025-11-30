@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TechCommunity.Application.Common.Exceptions;
 using TechCommunity.Application.Common.Interfaces;
+using TechCommunity.Application.Common.Services;
 
 namespace TechCommunity.Application.Features.Posts.Commands.DeletePost;
 
@@ -9,13 +10,16 @@ public class DeletePostCommandHandler : IRequestHandler<DeletePostCommand, Unit>
 {
     private readonly IApplicationDbContext _context;
     private readonly ICurrentUserService _currentUserService;
+    private readonly ICacheInvalidationService _cacheInvalidationService;
 
     public DeletePostCommandHandler(
         IApplicationDbContext context,
-        ICurrentUserService currentUserService)
+        ICurrentUserService currentUserService,
+        ICacheInvalidationService cacheInvalidationService)
     {
         _context = context;
         _currentUserService = currentUserService;
+        _cacheInvalidationService = cacheInvalidationService;
     }
 
     public async Task<Unit> Handle(DeletePostCommand request, CancellationToken cancellationToken)
@@ -37,11 +41,16 @@ public class DeletePostCommandHandler : IRequestHandler<DeletePostCommand, Unit>
             }
         }
 
+        var slug = post.Slug;
+
         // Soft delete - just mark as deleted
         post.IsDeleted = true;
         post.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        // Invalidate related caches
+        await _cacheInvalidationService.InvalidatePostCachesAsync(slug, cancellationToken);
 
         return Unit.Value;
     }

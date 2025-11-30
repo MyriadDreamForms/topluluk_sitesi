@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TechCommunity.Application.Common.Exceptions;
 using TechCommunity.Application.Common.Interfaces;
+using TechCommunity.Application.Common.Services;
 using TechCommunity.Application.Features.Posts.DTOs;
 using TechCommunity.Domain.Entities;
 
@@ -12,15 +13,18 @@ public class UpdatePostCommandHandler : IRequestHandler<UpdatePostCommand, PostD
     private readonly IApplicationDbContext _context;
     private readonly ICurrentUserService _currentUserService;
     private readonly ISlugService _slugService;
+    private readonly ICacheInvalidationService _cacheInvalidationService;
 
     public UpdatePostCommandHandler(
         IApplicationDbContext context,
         ICurrentUserService currentUserService,
-        ISlugService slugService)
+        ISlugService slugService,
+        ICacheInvalidationService cacheInvalidationService)
     {
         _context = context;
         _currentUserService = currentUserService;
         _slugService = slugService;
+        _cacheInvalidationService = cacheInvalidationService;
     }
 
     public async Task<PostDetailDto> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
@@ -89,6 +93,9 @@ public class UpdatePostCommandHandler : IRequestHandler<UpdatePostCommand, PostD
         }
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        // Invalidate related caches
+        await _cacheInvalidationService.InvalidatePostCachesAsync(post.Slug, cancellationToken);
 
         return new PostDetailDto
         {

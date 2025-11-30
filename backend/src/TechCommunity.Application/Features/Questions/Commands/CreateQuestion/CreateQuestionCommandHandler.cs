@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TechCommunity.Application.Common.Exceptions;
 using TechCommunity.Application.Common.Interfaces;
+using TechCommunity.Application.Common.Services;
 using TechCommunity.Domain.Entities;
 
 namespace TechCommunity.Application.Features.Questions.Commands.CreateQuestion;
@@ -12,17 +13,20 @@ public class CreateQuestionCommandHandler : IRequestHandler<CreateQuestionComman
     private readonly ICurrentUserService _currentUser;
     private readonly ISlugService _slugService;
     private readonly IMarkdownService _markdownService;
+    private readonly ICacheInvalidationService _cacheInvalidationService;
 
     public CreateQuestionCommandHandler(
         IApplicationDbContext context,
         ICurrentUserService currentUser,
         ISlugService slugService,
-        IMarkdownService markdownService)
+        IMarkdownService markdownService,
+        ICacheInvalidationService cacheInvalidationService)
     {
         _context = context;
         _currentUser = currentUser;
         _slugService = slugService;
         _markdownService = markdownService;
+        _cacheInvalidationService = cacheInvalidationService;
     }
 
     public async Task<Guid> Handle(CreateQuestionCommand request, CancellationToken cancellationToken)
@@ -96,6 +100,9 @@ public class CreateQuestionCommandHandler : IRequestHandler<CreateQuestionComman
 
         _context.Questions.Add(question);
         await _context.SaveChangesAsync(cancellationToken);
+
+        // Invalidate related caches
+        await _cacheInvalidationService.InvalidateQuestionCachesAsync(cancellationToken: cancellationToken);
 
         return question.Id;
     }

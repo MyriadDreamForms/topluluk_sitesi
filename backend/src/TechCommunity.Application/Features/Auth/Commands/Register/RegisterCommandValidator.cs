@@ -28,10 +28,27 @@ public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
             .MaximumLength(128).WithMessage("Şifre en fazla 128 karakter olabilir.")
             .Matches(@"[A-Z]").WithMessage("Şifre en az bir büyük harf içermelidir.")
             .Matches(@"[a-z]").WithMessage("Şifre en az bir küçük harf içermelidir.")
-            .Matches(@"[0-9]").WithMessage("Şifre en az bir rakam içermelidir.");
+            .Matches(@"[0-9]").WithMessage("Şifre en az bir rakam içermelidir.")
+            .Matches(@"[!@#$%^&*(),.?""':{}|<>_\-=\[\]\\;`~]").WithMessage("Şifre en az bir özel karakter içermelidir.")
+            .Must(NotContainCommonPatterns).WithMessage("Şifre yaygın kalıplar (123456, password vb.) içeremez.");
 
         RuleFor(x => x.ConfirmPassword)
             .NotEmpty().WithMessage("Şifre tekrarı gereklidir.")
             .Equal(x => x.Password).WithMessage("Şifreler eşleşmiyor.");
+    }
+
+    private bool NotContainCommonPatterns(string password)
+    {
+        if (string.IsNullOrEmpty(password)) return true;
+
+        var commonPatterns = new[]
+        {
+            "password", "123456", "12345678", "qwerty", "abc123",
+            "password1", "letmein", "welcome", "admin", "login",
+            "şifre", "sifre", "parola", "turkiye", "istanbul"
+        };
+
+        var lowerPassword = password.ToLowerInvariant();
+        return !commonPatterns.Any(pattern => lowerPassword.Contains(pattern));
     }
 }

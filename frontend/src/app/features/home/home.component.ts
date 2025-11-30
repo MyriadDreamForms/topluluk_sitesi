@@ -1,53 +1,18 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ApiService, PaginatedResponse } from '../../core/services/api.service';
-import { TagBadgeComponent, Tag } from '../../shared/components/tag-badge/tag-badge.component';
+import { FeedService, FeedItem, PopularTag } from './feed.service';
+import { EventsService, EventDto } from '../events/events.service';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
-
-interface Post {
-  id: string;
-  title: string;
-  slug: string;
-  excerpt: string;
-  viewCount: number;
-  createdAt: string;
-  author: {
-    username: string;
-    displayName: string;
-  };
-  tags: Tag[];
-}
-
-interface Question {
-  id: string;
-  title: string;
-  slug: string;
-  answerCount: number;
-  viewCount: number;
-  createdAt: string;
-  author: {
-    username: string;
-    displayName: string;
-  };
-  tags: Tag[];
-  isResolved: boolean;
-}
-
-interface Event {
-  id: string;
-  title: string;
-  slug: string;
-  eventType: 'Online' | 'Offline';
-  startDate: string;
-  location?: string;
-  onlineUrl?: string;
-}
+import { FeedItemComponent } from './feed-item/feed-item.component';
+import { PopularTagsComponent } from './popular-tags/popular-tags.component';
+import { UpcomingEventsComponent } from './upcoming-events/upcoming-events.component';
+import { SeoService } from '../../core/services/seo.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, TagBadgeComponent, LoadingSpinnerComponent],
+  imports: [CommonModule, RouterModule, LoadingSpinnerComponent, FeedItemComponent, PopularTagsComponent, UpcomingEventsComponent],
   template: `
     <div class="container">
       <section class="hero">
@@ -63,120 +28,56 @@ interface Event {
       </section>
 
       <div class="home-grid">
-        <section class="home-section">
+        <section class="feed-section">
           <div class="section-header">
-            <h2 class="section-title">Son Yazılar</h2>
-            <a routerLink="/posts" class="section-link">Tümünü Gör →</a>
+            <h2 class="section-title">Topluluk Akışı</h2>
+            <div class="feed-tabs">
+              <button 
+                class="tab" 
+                [class.active]="sortBy() === 'latest'"
+                (click)="setSort('latest')">
+                En Yeni
+              </button>
+              <button 
+                class="tab" 
+                [class.active]="sortBy() === 'popular'"
+                (click)="setSort('popular')">
+                Popüler
+              </button>
+              <button 
+                class="tab" 
+                [class.active]="sortBy() === 'trending'"
+                (click)="setSort('trending')">
+                Trend
+              </button>
+            </div>
           </div>
           
           @if (loading()) {
             <app-loading-spinner />
           } @else {
-            <div class="content-list">
-              @for (post of recentPosts(); track post.id) {
-                <article class="content-card">
-                  <h3 class="content-title">
-                    <a [routerLink]="['/posts', post.slug]">{{ post.title }}</a>
-                  </h3>
-                  <p class="content-excerpt">{{ post.excerpt }}</p>
-                  <div class="content-meta">
-                    <span class="author">{{ post.author.displayName }}</span>
-                    <span class="separator">•</span>
-                    <span class="date">{{ post.createdAt | date:'dd MMM yyyy' }}</span>
-                    <span class="separator">•</span>
-                    <span class="views">{{ post.viewCount }} görüntülenme</span>
-                  </div>
-                  <div class="content-tags">
-                    @for (tag of post.tags; track tag.id) {
-                      <app-tag-badge [tag]="tag" />
-                    }
-                  </div>
-                </article>
+            <div class="feed-list">
+              @for (item of feedItems(); track item.id) {
+                <app-feed-item [item]="item"></app-feed-item>
               } @empty {
-                <p class="empty-message">Henüz yazı yok.</p>
+                <div class="empty-state">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                  </svg>
+                  <p>Henüz içerik yok. İlk yazıyı veya soruyu siz paylaşın!</p>
+                </div>
               }
             </div>
-          }
-        </section>
-
-        <section class="home-section">
-          <div class="section-header">
-            <h2 class="section-title">Son Sorular</h2>
-            <a routerLink="/questions" class="section-link">Tümünü Gör →</a>
-          </div>
-          
-          @if (loading()) {
-            <app-loading-spinner />
-          } @else {
-            <div class="content-list">
-              @for (question of recentQuestions(); track question.id) {
-                <article class="content-card question-card">
-                  <div class="question-stats">
-                    <div class="stat" [class.resolved]="question.isResolved">
-                      <span class="stat-value">{{ question.answerCount }}</span>
-                      <span class="stat-label">cevap</span>
-                    </div>
-                  </div>
-                  <div class="question-content">
-                    <h3 class="content-title">
-                      <a [routerLink]="['/questions', question.slug]">{{ question.title }}</a>
-                    </h3>
-                    <div class="content-meta">
-                      <span class="author">{{ question.author.displayName }}</span>
-                      <span class="separator">•</span>
-                      <span class="date">{{ question.createdAt | date:'dd MMM yyyy' }}</span>
-                    </div>
-                    <div class="content-tags">
-                      @for (tag of question.tags; track tag.id) {
-                        <app-tag-badge [tag]="tag" />
-                      }
-                    </div>
-                  </div>
-                </article>
-              } @empty {
-                <p class="empty-message">Henüz soru yok.</p>
-              }
-            </div>
+            
+            <a routerLink="/posts" class="section-link">Tüm içerikleri gör →</a>
           }
         </section>
 
         <aside class="home-sidebar">
-          <section class="sidebar-section">
-            <h3 class="sidebar-title">Yaklaşan Etkinlikler</h3>
-            @if (loading()) {
-              <app-loading-spinner [size]="24" />
-            } @else {
-              <div class="events-list">
-                @for (event of upcomingEvents(); track event.id) {
-                  <a [routerLink]="['/events', event.slug]" class="event-card">
-                    <div class="event-date">
-                      <span class="event-day">{{ event.startDate | date:'dd' }}</span>
-                      <span class="event-month">{{ event.startDate | date:'MMM' }}</span>
-                    </div>
-                    <div class="event-info">
-                      <span class="event-title">{{ event.title }}</span>
-                      <span class="event-type" [class.online]="event.eventType === 'Online'">
-                        {{ event.eventType === 'Online' ? '🌐 Online' : '📍 ' + event.location }}
-                      </span>
-                    </div>
-                  </a>
-                } @empty {
-                  <p class="empty-message">Yaklaşan etkinlik yok.</p>
-                }
-              </div>
-            }
-            <a routerLink="/events" class="sidebar-link">Tüm Etkinlikler →</a>
-          </section>
+          <app-popular-tags [tags]="popularTags()"></app-popular-tags>
 
-          <section class="sidebar-section">
-            <h3 class="sidebar-title">Popüler Etiketler</h3>
-            <div class="tags-cloud">
-              @for (tag of popularTags(); track tag.id) {
-                <app-tag-badge [tag]="tag" [showCount]="true" [large]="true" />
-              }
-            </div>
-            <a routerLink="/tags" class="sidebar-link">Tüm Etiketler →</a>
-          </section>
+          <app-upcoming-events></app-upcoming-events>
         </aside>
       </div>
     </div>
@@ -268,8 +169,62 @@ interface Event {
 
     .home-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr 300px;
+      grid-template-columns: 1fr 320px;
       gap: 2rem;
+    }
+
+    .feed-section {
+      background: var(--bg-secondary, #17171c);
+      border: 1px solid var(--border-color, #2a2a35);
+      border-radius: 16px;
+      padding: 1.5rem;
+    }
+
+    .feed-tabs {
+      display: flex;
+      gap: 0.25rem;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 0.25rem;
+      border-radius: 10px;
+      border: 1px solid var(--border-color, #2a2a35);
+    }
+
+    .tab {
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-muted, #94a3b8);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab:hover {
+      color: var(--text-primary, #f8fafc);
+    }
+
+    .tab.active {
+      background: linear-gradient(135deg, #ff6d5a 0%, #ff5142 100%);
+      color: white;
+    }
+
+    .feed-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-muted, #64748b);
+    }
+
+    .empty-state svg {
+      margin-bottom: 1rem;
+      opacity: 0.5;
     }
 
     .home-section {
@@ -519,11 +474,10 @@ interface Event {
 
     @media (max-width: 1024px) {
       .home-grid {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
       }
 
       .home-sidebar {
-        grid-column: span 2;
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 1.5rem;
@@ -543,86 +497,69 @@ interface Event {
         flex-direction: column;
       }
 
-      .home-grid {
-        grid-template-columns: 1fr;
+      .section-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+      }
+
+      .feed-tabs {
+        justify-content: center;
       }
 
       .home-sidebar {
-        grid-column: 1;
         grid-template-columns: 1fr;
       }
     }
   `]
 })
 export class HomeComponent implements OnInit {
-  private readonly api = inject(ApiService);
+  private readonly feedService = inject(FeedService);
+  private readonly eventsService = inject(EventsService);
+  private readonly seoService = inject(SeoService);
 
   loading = signal(true);
-  recentPosts = signal<Post[]>([]);
-  recentQuestions = signal<Question[]>([]);
-  upcomingEvents = signal<Event[]>([]);
-  popularTags = signal<Tag[]>([]);
+  feedItems = signal<FeedItem[]>([]);
+  popularTags = signal<PopularTag[]>([]);
+  sortBy = signal<'latest' | 'popular' | 'trending'>('latest');
 
   ngOnInit(): void {
+    this.seoService.updateTags({
+      title: 'Türkiye Teknoloji Topluluğu',
+      description: 'Türkiye\'nin en büyük teknoloji topluluğu. Yazılım, DevOps, veri bilimi ve daha fazlası hakkında içerikler, sorular ve etkinlikler.',
+      keywords: ['teknoloji', 'yazılım', 'programlama', 'topluluk', 'Türkiye']
+    });
     this.loadData();
   }
 
+  setSort(sort: 'latest' | 'popular' | 'trending'): void {
+    this.sortBy.set(sort);
+    this.loadFeed();
+  }
+
   private loadData(): void {
-    // Simulated data for now - will be replaced with actual API calls
-    setTimeout(() => {
-      this.recentPosts.set([
-        {
-          id: '1',
-          title: 'TypeScript 5.0 ile Gelen Yenilikler',
-          slug: 'typescript-5-yenilikler',
-          excerpt: 'TypeScript 5.0 sürümü ile birlikte gelen dekoratörler, const type parametreleri ve daha birçok yenilik...',
-          viewCount: 1234,
-          createdAt: new Date().toISOString(),
-          author: { username: 'ahmet', displayName: 'Ahmet Yılmaz' },
-          tags: [
-            { id: '1', name: 'TypeScript', slug: 'typescript' },
-            { id: '2', name: 'JavaScript', slug: 'javascript' }
-          ]
-        }
-      ]);
+    this.loadFeed();
+    this.loadPopularTags();
+  }
 
-      this.recentQuestions.set([
-        {
-          id: '1',
-          title: 'Angular 21\'de standalone component nasıl oluşturulur?',
-          slug: 'angular-21-standalone-component',
-          answerCount: 3,
-          viewCount: 567,
-          createdAt: new Date().toISOString(),
-          author: { username: 'mehmet', displayName: 'Mehmet Demir' },
-          tags: [
-            { id: '3', name: 'Angular', slug: 'angular' },
-            { id: '1', name: 'TypeScript', slug: 'typescript' }
-          ],
-          isResolved: true
-        }
-      ]);
+  private loadFeed(): void {
+    this.loading.set(true);
+    this.feedService.getFeed(this.sortBy(), 1, 10).subscribe({
+      next: (response) => {
+        this.feedItems.set(response.items);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+      }
+    });
+  }
 
-      this.upcomingEvents.set([
-        {
-          id: '1',
-          title: 'İstanbul Tech Meetup',
-          slug: 'istanbul-tech-meetup',
-          eventType: 'Offline',
-          startDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-          location: 'İstanbul'
-        }
-      ]);
-
-      this.popularTags.set([
-        { id: '1', name: 'TypeScript', slug: 'typescript', postCount: 156 },
-        { id: '3', name: 'Angular', slug: 'angular', postCount: 89 },
-        { id: '4', name: 'React', slug: 'react', postCount: 134 },
-        { id: '5', name: 'Node.js', slug: 'nodejs', postCount: 78 },
-        { id: '6', name: 'Python', slug: 'python', postCount: 92 }
-      ]);
-
-      this.loading.set(false);
-    }, 500);
+  private loadPopularTags(): void {
+    this.feedService.getPopularTags(8).subscribe({
+      next: (tags) => {
+        this.popularTags.set(tags);
+      }
+    });
   }
 }

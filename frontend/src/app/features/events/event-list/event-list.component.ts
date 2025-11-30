@@ -1,29 +1,8 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
-
-interface Event {
-  id: string;
-  title: string;
-  slug: string;
-  description: string;
-  eventType: 'Online' | 'Offline' | 'Hybrid';
-  startDate: string;
-  endDate?: string;
-  location?: string;
-  onlineUrl?: string;
-  imageUrl?: string;
-  organizer: {
-    username: string;
-    displayName: string;
-  };
-  attendeeCount: number;
-  maxAttendees?: number;
-  tags: string[];
-  isFree: boolean;
-  price?: number;
-}
+import { EventsService, EventDto } from '../events.service';
 
 @Component({
   selector: 'app-event-list',
@@ -106,9 +85,6 @@ interface Event {
                   <div class="event-type-badge" [class]="event.eventType.toLowerCase()">
                     {{ getEventTypeIcon(event.eventType) }} {{ getEventTypeLabel(event.eventType) }}
                   </div>
-                  @if (event.isFree) {
-                    <div class="free-badge">Ücretsiz</div>
-                  }
                 </div>
                 
                 <div class="event-content">
@@ -138,28 +114,15 @@ interface Event {
                       <span>Online Etkinlik</span>
                     } @else {
                       <span class="location-icon">📍</span>
-                      <span>{{ event.location }}</span>
+                      <span>{{ event.location || 'Konum belirtilmedi' }}</span>
                     }
                   </div>
 
                   <div class="event-footer">
                     <div class="event-organizer">
-                      <div class="organizer-avatar">{{ event.organizer.displayName.charAt(0) }}</div>
-                      <span class="organizer-name">{{ event.organizer.displayName }}</span>
+                      <div class="organizer-avatar">{{ event.createdByDisplayName.charAt(0) }}</div>
+                      <span class="organizer-name">{{ event.createdByDisplayName }}</span>
                     </div>
-                    <div class="event-attendees">
-                      <span class="attendee-count">{{ event.attendeeCount }}</span>
-                      @if (event.maxAttendees) {
-                        <span class="attendee-max">/ {{ event.maxAttendees }}</span>
-                      }
-                      <span class="attendee-label">katılımcı</span>
-                    </div>
-                  </div>
-
-                  <div class="event-tags">
-                    @for (tag of event.tags.slice(0, 3); track tag) {
-                      <span class="tag">{{ tag }}</span>
-                    }
                   </div>
                 </div>
               </article>
@@ -546,9 +509,11 @@ interface Event {
   `]
 })
 export class EventListComponent implements OnInit {
+  private readonly eventsService = inject(EventsService);
+  
   loading = signal(true);
-  events = signal<Event[]>([]);
-  filteredEvents = signal<Event[]>([]);
+  events = signal<EventDto[]>([]);
+  filteredEvents = signal<EventDto[]>([]);
   activeFilter = signal<'upcoming' | 'past'>('upcoming');
   typeFilter = signal<'all' | 'online' | 'offline' | 'hybrid'>('all');
 
@@ -616,105 +581,15 @@ export class EventListComponent implements OnInit {
   }
 
   private loadEvents(): void {
-    // Simulated data - will be replaced with actual API call
-    setTimeout(() => {
-      const mockEvents: Event[] = [
-        {
-          id: '1',
-          title: 'İstanbul Tech Meetup #42',
-          slug: 'istanbul-tech-meetup-42',
-          description: 'Frontend teknolojileri ve modern web geliştirme pratikleri üzerine konuşacağımız aylık buluşmamız.',
-          eventType: 'Offline',
-          startDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-          endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000 + 3 * 60 * 60 * 1000).toISOString(),
-          location: 'Google Türkiye, Levent, İstanbul',
-          organizer: { username: 'techcommunity', displayName: 'Tech Community TR' },
-          attendeeCount: 87,
-          maxAttendees: 150,
-          tags: ['Frontend', 'React', 'TypeScript'],
-          isFree: true
-        },
-        {
-          id: '2',
-          title: 'AI & Machine Learning Workshop',
-          slug: 'ai-ml-workshop',
-          description: 'Yapay zeka ve makine öğrenimi temellerini öğreneceğiniz uygulamalı workshop. Başlangıç seviyesi.',
-          eventType: 'Online',
-          startDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
-          endDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000 + 4 * 60 * 60 * 1000).toISOString(),
-          onlineUrl: 'https://zoom.us/j/123456',
-          organizer: { username: 'datascience', displayName: 'Data Science Türkiye' },
-          attendeeCount: 234,
-          tags: ['AI', 'Machine Learning', 'Python'],
-          isFree: false,
-          price: 150
-        },
-        {
-          id: '3',
-          title: 'DevOps & Cloud Native Konferansı',
-          slug: 'devops-cloud-native-konferansi',
-          description: 'Kubernetes, Docker, CI/CD ve cloud native teknolojiler üzerine tam gün konferans.',
-          eventType: 'Hybrid',
-          startDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
-          endDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000 + 8 * 60 * 60 * 1000).toISOString(),
-          location: 'Bilgi Üniversitesi, Santral İstanbul',
-          onlineUrl: 'https://youtube.com/live/xyz',
-          organizer: { username: 'cloudnative', displayName: 'Cloud Native TR' },
-          attendeeCount: 456,
-          maxAttendees: 500,
-          tags: ['DevOps', 'Kubernetes', 'Docker'],
-          isFree: false,
-          price: 250
-        },
-        {
-          id: '4',
-          title: 'Ankara JavaScript Meetup',
-          slug: 'ankara-js-meetup',
-          description: 'JavaScript ekosistemi ve modern framework\'ler hakkında sohbet ve networking.',
-          eventType: 'Offline',
-          startDate: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
-          location: 'WeWork Ankara, Çankaya',
-          organizer: { username: 'ankarajs', displayName: 'Ankara JS' },
-          attendeeCount: 45,
-          maxAttendees: 60,
-          tags: ['JavaScript', 'Node.js', 'Vue.js'],
-          isFree: true
-        },
-        {
-          id: '5',
-          title: 'Startup Weekend Tech Edition',
-          slug: 'startup-weekend-tech',
-          description: '54 saatlik yoğun girişimcilik deneyimi. Fikir geliştirme, takım oluşturma ve pitch.',
-          eventType: 'Offline',
-          startDate: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toISOString(),
-          endDate: new Date(Date.now() + 23 * 24 * 60 * 60 * 1000).toISOString(),
-          location: 'İTÜ Teknokent, Maslak, İstanbul',
-          organizer: { username: 'startupweekend', displayName: 'Startup Weekend TR' },
-          attendeeCount: 120,
-          maxAttendees: 150,
-          tags: ['Startup', 'Entrepreneurship', 'Tech'],
-          isFree: false,
-          price: 100
-        },
-        {
-          id: '6',
-          title: 'Women in Tech Networking',
-          slug: 'women-in-tech-networking',
-          description: 'Teknoloji sektöründeki kadınlar için networking ve mentorluk etkinliği.',
-          eventType: 'Online',
-          startDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
-          endDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000).toISOString(),
-          onlineUrl: 'https://meet.google.com/abc-xyz',
-          organizer: { username: 'womenintech', displayName: 'Women in Tech TR' },
-          attendeeCount: 78,
-          tags: ['Networking', 'Career', 'Diversity'],
-          isFree: true
-        }
-      ];
-
-      this.events.set(mockEvents);
-      this.applyFilters();
-      this.loading.set(false);
-    }, 300);
+    this.eventsService.getEvents('all', 1, 50).subscribe({
+      next: (response) => {
+        this.events.set(response.items);
+        this.applyFilters();
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+      }
+    });
   }
 }

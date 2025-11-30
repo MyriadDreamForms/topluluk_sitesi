@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using TechCommunity.Application.Common.Behaviors;
+using TechCommunity.Application.Common.Services;
 
 namespace TechCommunity.Application;
 
@@ -18,6 +19,9 @@ public static class DependencyInjection
         });
 
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+        // Register application services
+        services.AddScoped<ICacheInvalidationService, CacheInvalidationService>();
 
         return services;
     }

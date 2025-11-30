@@ -44,7 +44,14 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => 
+        policy.RequireRole("Admin"));
+    
+    options.AddPolicy("AdminOrModerator", policy => 
+        policy.RequireRole("Admin", "Moderator"));
+});
 
 // CORS
 var corsOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? ["http://localhost:4200"];
@@ -59,13 +66,14 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Rate Limiting
+// Rate Limiting with endpoint-specific policies
 builder.Services.AddRateLimiter(options =>
 {
     var permitLimit = builder.Configuration.GetValue("RateLimiting:PermitLimit", 100);
     var window = builder.Configuration.GetValue("RateLimiting:Window", 60);
     var queueLimit = builder.Configuration.GetValue("RateLimiting:QueueLimit", 2);
 
+    // Global rate limiter
     options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
         RateLimitPartition.GetFixedWindowLimiter(
             partitionKey: context.User?.Identity?.Name ?? context.Request.Headers.Host.ToString(),
@@ -77,10 +85,71 @@ builder.Services.AddRateLimiter(options =>
                 QueueLimit = queueLimit
             }));
 
+    // Strict policy for authentication endpoints (5 attempts per minute)
+    options.AddPolicy("auth", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(1),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0
+            }));
+
+    // Strict policy for registration (3 attempts per minute)
+    options.AddPolicy("register", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 3,
+                Window = TimeSpan.FromMinutes(1),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0
+            }));
+
+    // Content creation policy (10 per minute)
+    options.AddPolicy("create", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.User?.Identity?.Name ?? context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 10,
+                Window = TimeSpan.FromMinutes(1),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 2
+            }));
+
+    // Search policy (30 per minute)
+    options.AddPolicy("search", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.User?.Identity?.Name ?? context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 30,
+                Window = TimeSpan.FromMinutes(1),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 5
+            }));
+
     options.OnRejected = async (context, token) =>
     {
         context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
-        await context.HttpContext.Response.WriteAsync("Too many requests. Please try again later.", token);
+        context.HttpContext.Response.ContentType = "application/json";
+        
+        var retryAfter = context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfterValue)
+            ? retryAfterValue.TotalSeconds
+            : 60;
+        
+        context.HttpContext.Response.Headers.Append("Retry-After", retryAfter.ToString());
+        
+        await context.HttpContext.Response.WriteAsJsonAsync(new
+        {
+            success = false,
+            message = "Çok fazla istek gönderdiniz. Lütfen bir süre bekleyiniz.",
+            retryAfterSeconds = retryAfter
+        }, cancellationToken: token);
     };
 });
 
@@ -124,6 +193,15 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseExceptionHandling();
+
+// Security headers (before CORS and other middleware)
+app.UseSecurityHeaders();
+
+// HSTS in production
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHsts();
+}
 
 if (app.Environment.IsDevelopment())
 {

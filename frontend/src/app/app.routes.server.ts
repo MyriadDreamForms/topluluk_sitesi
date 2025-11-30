@@ -19,6 +19,10 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server
   },
   {
+    path: 'events/:slug/edit',
+    renderMode: RenderMode.Server
+  },
+  {
     path: 'tags/:slug',
     renderMode: RenderMode.Server
   },
