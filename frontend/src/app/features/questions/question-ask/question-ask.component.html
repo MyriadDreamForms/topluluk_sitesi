@@ -1,0 +1,154 @@
+<div class="question-ask-page">
+  <div class="container">
+    <div class="page-header">
+      <h1>{{ isEditMode() ? 'Soruyu Düzenle' : 'Soru Sor' }}</h1>
+      <p class="subtitle">Topluluğa bir soru sorun ve deneyimli geliştiricilerden yanıt alın</p>
+    </div>
+
+    <div class="form-container">
+      <form [formGroup]="questionForm" (ngSubmit)="onSubmit()">
+        <!-- Title -->
+        <div class="form-group">
+          <label for="title">Başlık</label>
+          <input 
+            type="text" 
+            id="title" 
+            formControlName="title"
+            placeholder="Sorunuzun özeti nedir?"
+            [class.error]="questionForm.get('title')?.invalid && questionForm.get('title')?.touched">
+          @if (questionForm.get('title')?.invalid && questionForm.get('title')?.touched) {
+            <span class="error-message">
+              @if (questionForm.get('title')?.errors?.['required']) {
+                Başlık gereklidir
+              } @else if (questionForm.get('title')?.errors?.['minlength']) {
+                Başlık en az 10 karakter olmalıdır
+              } @else if (questionForm.get('title')?.errors?.['maxlength']) {
+                Başlık en fazla 200 karakter olabilir
+              }
+            </span>
+          }
+          <span class="hint">Sorununuzu en iyi şekilde açıklayan kısa bir başlık yazın</span>
+        </div>
+
+        <!-- Body -->
+        <div class="form-group">
+          <label for="body">İçerik</label>
+          <div class="editor-tabs">
+            <button 
+              type="button" 
+              class="tab-btn"
+              [class.active]="!showPreview()"
+              (click)="showPreview.set(false)">
+              Yaz
+            </button>
+            <button 
+              type="button" 
+              class="tab-btn"
+              [class.active]="showPreview()"
+              (click)="showPreview.set(true)">
+              Önizle
+            </button>
+          </div>
+          @if (!showPreview()) {
+            <textarea 
+              id="body" 
+              formControlName="body"
+              rows="12"
+              placeholder="Sorununuzu detaylı olarak açıklayın. Markdown desteklenmektedir."
+              [class.error]="questionForm.get('body')?.invalid && questionForm.get('body')?.touched">
+            </textarea>
+          } @else {
+            <div class="preview-content markdown-body" [innerHTML]="previewHtml()">
+            </div>
+          }
+          @if (questionForm.get('body')?.invalid && questionForm.get('body')?.touched) {
+            <span class="error-message">
+              @if (questionForm.get('body')?.errors?.['required']) {
+                İçerik gereklidir
+              } @else if (questionForm.get('body')?.errors?.['minlength']) {
+                İçerik en az 30 karakter olmalıdır
+              }
+            </span>
+          }
+          <span class="hint">Markdown formatını kullanabilirsiniz.</span>
+        </div>
+
+        <!-- Tags -->
+        <div class="form-group">
+          <label for="tags">Etiketler</label>
+          <div class="tags-input-container">
+            <div class="selected-tags">
+              @for (tag of selectedTags(); track tag) {
+                <span class="tag-chip">
+                  {{ tag }}
+                  <button type="button" class="remove-tag" (click)="removeTag(tag)">×</button>
+                </span>
+              }
+            </div>
+            <input 
+              type="text" 
+              id="tags" 
+              [(ngModel)]="tagInput"
+              [ngModelOptions]="{standalone: true}"
+              placeholder="Etiket ekle (Enter ile onaylayın)"
+              (keydown.enter)="addTag($event)"
+              (keydown.comma)="addTag($event)"
+              [disabled]="selectedTags().length >= 5">
+          </div>
+          <span class="hint">En fazla 5 etiket ekleyebilirsiniz. Enter veya virgül ile onaylayın.</span>
+        </div>
+
+        <!-- Submit Buttons -->
+        <div class="form-actions">
+          <button 
+            type="button" 
+            class="btn btn-secondary"
+            (click)="goBack()">
+            İptal
+          </button>
+          <button 
+            type="submit" 
+            class="btn btn-primary"
+            [disabled]="questionForm.invalid || submitting()">
+            @if (submitting()) {
+              <span class="spinner"></span>
+              {{ isEditMode() ? 'Kaydediliyor...' : 'Gönderiliyor...' }}
+            } @else {
+              {{ isEditMode() ? 'Kaydet' : 'Soruyu Gönder' }}
+            }
+          </button>
+        </div>
+      </form>
+
+      <!-- Tips Sidebar -->
+      <aside class="tips-sidebar">
+        <div class="tip-card">
+          <h3>İyi Bir Soru Nasıl Sorulur?</h3>
+          <ul>
+            <li>
+              <strong>Spesifik olun:</strong> Sorununuzu net ve öz bir şekilde tanımlayın.
+            </li>
+            <li>
+              <strong>Bağlam verin:</strong> Ne yapmaya çalıştığınızı ve neyi başardığınızı açıklayın.
+            </li>
+            <li>
+              <strong>Kod paylaşın:</strong> İlgili kod parçalarını ekleyin.
+            </li>
+            <li>
+              <strong>Hata mesajlarını ekleyin:</strong> Aldığınız hata mesajlarını tam olarak yazın.
+            </li>
+            <li>
+              <strong>Araştırma yapın:</strong> Benzer soruları kontrol edin.
+            </li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+
+    @if (error()) {
+      <div class="error-banner">
+        {{ error() }}
+      </div>
+    }
+  </div>
+</div>

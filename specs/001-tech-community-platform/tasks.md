@@ -27,18 +27,18 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create backend solution with Clean Architecture projects in backend/
-- [ ] T002 Initialize .NET 10 solution file backend/TechCommunity.sln
-- [ ] T003 [P] Create TechCommunity.Domain project in backend/src/TechCommunity.Domain/
-- [ ] T004 [P] Create TechCommunity.Application project in backend/src/TechCommunity.Application/
-- [ ] T005 [P] Create TechCommunity.Infrastructure project in backend/src/TechCommunity.Infrastructure/
-- [ ] T006 [P] Create TechCommunity.API project in backend/src/TechCommunity.API/
-- [ ] T007 Setup project references (Domain → none, Application → Domain, Infrastructure → Application, API → all)
-- [ ] T008 [P] Initialize Angular 21 project with SSR in frontend/
-- [ ] T009 [P] Configure Angular routing with lazy loading in frontend/src/app/app.routes.ts
-- [ ] T010 [P] Setup Angular environments in frontend/src/environments/
-- [ ] T011 [P] Configure ESLint and Prettier for backend in backend/.editorconfig
-- [ ] T012 [P] Configure ESLint and Prettier for frontend in frontend/.eslintrc.json
+- [X] T001 Create backend solution with Clean Architecture projects in backend/
+- [X] T002 Initialize .NET 10 solution file backend/TechCommunity.sln
+- [X] T003 [P] Create TechCommunity.Domain project in backend/src/TechCommunity.Domain/
+- [X] T004 [P] Create TechCommunity.Application project in backend/src/TechCommunity.Application/
+- [X] T005 [P] Create TechCommunity.Infrastructure project in backend/src/TechCommunity.Infrastructure/
+- [X] T006 [P] Create TechCommunity.API project in backend/src/TechCommunity.API/
+- [X] T007 Setup project references (Domain → none, Application → Domain, Infrastructure → Application, API → all)
+- [X] T008 [P] Initialize Angular 21 project with SSR in frontend/
+- [X] T009 [P] Configure Angular routing with lazy loading in frontend/src/app/app.routes.ts
+- [X] T010 [P] Setup Angular environments in frontend/src/environments/
+- [X] T011 [P] Configure ESLint and Prettier for backend in backend/.editorconfig
+- [X] T012 [P] Configure ESLint and Prettier for frontend in frontend/.eslintrc.json
 
 ---
 
@@ -50,83 +50,83 @@
 
 ### Backend Core Infrastructure
 
-- [ ] T013 Add NuGet packages (MediatR, FluentValidation, BCrypt.Net) to backend projects
-- [ ] T014 Create base entity classes in backend/src/TechCommunity.Domain/Common/BaseEntity.cs
-- [ ] T015 [P] Create UserRole enum in backend/src/TechCommunity.Domain/Enums/UserRole.cs
-- [ ] T016 [P] Create EventType enum in backend/src/TechCommunity.Domain/Enums/EventType.cs
-- [ ] T017 Create User entity in backend/src/TechCommunity.Domain/Entities/User.cs
-- [ ] T018 [P] Create Post entity in backend/src/TechCommunity.Domain/Entities/Post.cs
-- [ ] T019 [P] Create Question entity in backend/src/TechCommunity.Domain/Entities/Question.cs
-- [ ] T020 [P] Create Answer entity in backend/src/TechCommunity.Domain/Entities/Answer.cs
-- [ ] T021 [P] Create Comment entity in backend/src/TechCommunity.Domain/Entities/Comment.cs
-- [ ] T022 [P] Create Tag entity in backend/src/TechCommunity.Domain/Entities/Tag.cs
-- [ ] T023 [P] Create Event entity in backend/src/TechCommunity.Domain/Entities/Event.cs
-- [ ] T024 [P] Create RefreshToken entity in backend/src/TechCommunity.Domain/Entities/RefreshToken.cs
-- [ ] T025 [P] Create PostTag junction entity in backend/src/TechCommunity.Domain/Entities/PostTag.cs
-- [ ] T026 [P] Create QuestionTag junction entity in backend/src/TechCommunity.Domain/Entities/QuestionTag.cs
-- [ ] T027 Setup ApplicationDbContext in backend/src/TechCommunity.Infrastructure/Persistence/ApplicationDbContext.cs
-- [ ] T028 [P] Create User EF configuration in backend/src/TechCommunity.Infrastructure/Persistence/Configurations/UserConfiguration.cs
-- [ ] T029 [P] Create Post EF configuration in backend/src/TechCommunity.Infrastructure/Persistence/Configurations/PostConfiguration.cs
-- [ ] T030 [P] Create Question EF configuration in backend/src/TechCommunity.Infrastructure/Persistence/Configurations/QuestionConfiguration.cs
-- [ ] T031 [P] Create Answer EF configuration in backend/src/TechCommunity.Infrastructure/Persistence/Configurations/AnswerConfiguration.cs
-- [ ] T032 [P] Create Comment EF configuration in backend/src/TechCommunity.Infrastructure/Persistence/Configurations/CommentConfiguration.cs
-- [ ] T033 [P] Create Tag EF configuration in backend/src/TechCommunity.Infrastructure/Persistence/Configurations/TagConfiguration.cs
-- [ ] T034 [P] Create Event EF configuration in backend/src/TechCommunity.Infrastructure/Persistence/Configurations/EventConfiguration.cs
-- [ ] T035 [P] Create RefreshToken EF configuration in backend/src/TechCommunity.Infrastructure/Persistence/Configurations/RefreshTokenConfiguration.cs
-- [ ] T036 Create initial EF migration in backend/src/TechCommunity.Infrastructure/Persistence/Migrations/
-- [ ] T037 Configure PostgreSQL Turkish FTS in migration for Posts and Questions SearchVector columns
-- [ ] T038 Create IApplicationDbContext interface in backend/src/TechCommunity.Application/Common/Interfaces/IApplicationDbContext.cs
-- [ ] T039 [P] Create ICurrentUserService interface in backend/src/TechCommunity.Application/Common/Interfaces/ICurrentUserService.cs
-- [ ] T040 [P] Create IJwtService interface in backend/src/TechCommunity.Application/Common/Interfaces/IJwtService.cs
-- [ ] T041 [P] Create ISlugService interface in backend/src/TechCommunity.Application/Common/Interfaces/ISlugService.cs
-- [ ] T042 [P] Create IMarkdownService interface in backend/src/TechCommunity.Application/Common/Interfaces/IMarkdownService.cs
-- [ ] T043 [P] Create ICacheService interface in backend/src/TechCommunity.Application/Common/Interfaces/ICacheService.cs
-- [ ] T044 Setup MediatR pipeline behaviors in backend/src/TechCommunity.Application/Common/Behaviors/
-- [ ] T045 [P] Create ValidationBehavior in backend/src/TechCommunity.Application/Common/Behaviors/ValidationBehavior.cs
-- [ ] T046 [P] Create LoggingBehavior in backend/src/TechCommunity.Application/Common/Behaviors/LoggingBehavior.cs
-- [ ] T047 Create custom exceptions in backend/src/TechCommunity.Application/Common/Exceptions/
-- [ ] T048 [P] Create NotFoundException in backend/src/TechCommunity.Application/Common/Exceptions/NotFoundException.cs
-- [ ] T049 [P] Create ValidationException in backend/src/TechCommunity.Application/Common/Exceptions/ValidationException.cs
-- [ ] T050 [P] Create ForbiddenException in backend/src/TechCommunity.Application/Common/Exceptions/ForbiddenException.cs
-- [ ] T051 [P] Create UnauthorizedException in backend/src/TechCommunity.Application/Common/Exceptions/UnauthorizedException.cs
-- [ ] T052 Implement JwtService in backend/src/TechCommunity.Infrastructure/Services/Identity/JwtService.cs
-- [ ] T052a Configure JWT expiry (30min access, 7day refresh) and session timeout (FR-005) in backend/src/TechCommunity.API/appsettings.json
-- [ ] T053 [P] Implement SlugService (Turkish char support) in backend/src/TechCommunity.Infrastructure/Services/SlugService.cs
-- [ ] T054 [P] Implement MarkdownService in backend/src/TechCommunity.Infrastructure/Services/MarkdownService.cs
-- [ ] T055 [P] Implement CacheService (IMemoryCache) in backend/src/TechCommunity.Infrastructure/Services/Caching/CacheService.cs
-- [ ] T056 [P] Implement CurrentUserService in backend/src/TechCommunity.Infrastructure/Services/Identity/CurrentUserService.cs
-- [ ] T057 Create DependencyInjection for Infrastructure in backend/src/TechCommunity.Infrastructure/DependencyInjection.cs
-- [ ] T058 Create DependencyInjection for Application in backend/src/TechCommunity.Application/DependencyInjection.cs
-- [ ] T059 Setup Program.cs with DI, CORS, JWT auth in backend/src/TechCommunity.API/Program.cs
-- [ ] T060 Create global exception handler middleware in backend/src/TechCommunity.API/Middleware/ExceptionHandlingMiddleware.cs
-- [ ] T061 [P] Create standard API response wrapper in backend/src/TechCommunity.API/Models/ApiResponse.cs
-- [ ] T062 [P] Create pagination request/response models in backend/src/TechCommunity.Application/Common/Models/PaginatedList.cs
-- [ ] T063 Configure rate limiting middleware in backend/src/TechCommunity.API/Program.cs
-- [ ] T064 Configure Swagger/OpenAPI in backend/src/TechCommunity.API/Program.cs
+- [X] T013 Add NuGet packages (MediatR, FluentValidation, BCrypt.Net) to backend projects
+- [X] T014 Create base entity classes in backend/src/TechCommunity.Domain/Common/BaseEntity.cs
+- [X] T015 [P] Create UserRole enum in backend/src/TechCommunity.Domain/Enums/UserRole.cs
+- [X] T016 [P] Create EventType enum in backend/src/TechCommunity.Domain/Enums/EventType.cs
+- [X] T017 Create User entity in backend/src/TechCommunity.Domain/Entities/User.cs
+- [X] T018 [P] Create Post entity in backend/src/TechCommunity.Domain/Entities/Post.cs
+- [X] T019 [P] Create Question entity in backend/src/TechCommunity.Domain/Entities/Question.cs
+- [X] T020 [P] Create Answer entity in backend/src/TechCommunity.Domain/Entities/Answer.cs
+- [X] T021 [P] Create Comment entity in backend/src/TechCommunity.Domain/Entities/Comment.cs
+- [X] T022 [P] Create Tag entity in backend/src/TechCommunity.Domain/Entities/Tag.cs
+- [X] T023 [P] Create Event entity in backend/src/TechCommunity.Domain/Entities/Event.cs
+- [X] T024 [P] Create RefreshToken entity in backend/src/TechCommunity.Domain/Entities/RefreshToken.cs
+- [X] T025 [P] Create PostTag junction entity in backend/src/TechCommunity.Domain/Entities/PostTag.cs
+- [X] T026 [P] Create QuestionTag junction entity in backend/src/TechCommunity.Domain/Entities/QuestionTag.cs
+- [X] T027 Setup ApplicationDbContext in backend/src/TechCommunity.Infrastructure/Persistence/ApplicationDbContext.cs
+- [X] T028 [P] Create User EF configuration in backend/src/TechCommunity.Infrastructure/Persistence/Configurations/UserConfiguration.cs
+- [X] T029 [P] Create Post EF configuration in backend/src/TechCommunity.Infrastructure/Persistence/Configurations/PostConfiguration.cs
+- [X] T030 [P] Create Question EF configuration in backend/src/TechCommunity.Infrastructure/Persistence/Configurations/QuestionConfiguration.cs
+- [X] T031 [P] Create Answer EF configuration in backend/src/TechCommunity.Infrastructure/Persistence/Configurations/AnswerConfiguration.cs
+- [X] T032 [P] Create Comment EF configuration in backend/src/TechCommunity.Infrastructure/Persistence/Configurations/CommentConfiguration.cs
+- [X] T033 [P] Create Tag EF configuration in backend/src/TechCommunity.Infrastructure/Persistence/Configurations/TagConfiguration.cs
+- [X] T034 [P] Create Event EF configuration in backend/src/TechCommunity.Infrastructure/Persistence/Configurations/EventConfiguration.cs
+- [X] T035 [P] Create RefreshToken EF configuration in backend/src/TechCommunity.Infrastructure/Persistence/Configurations/RefreshTokenConfiguration.cs
+- [X] T036 Create initial EF migration in backend/src/TechCommunity.Infrastructure/Persistence/Migrations/
+- [X] T037 Configure PostgreSQL Turkish FTS in migration for Posts and Questions SearchVector columns
+- [X] T038 Create IApplicationDbContext interface in backend/src/TechCommunity.Application/Common/Interfaces/IApplicationDbContext.cs
+- [X] T039 [P] Create ICurrentUserService interface in backend/src/TechCommunity.Application/Common/Interfaces/ICurrentUserService.cs
+- [X] T040 [P] Create IJwtService interface in backend/src/TechCommunity.Application/Common/Interfaces/IJwtService.cs
+- [X] T041 [P] Create ISlugService interface in backend/src/TechCommunity.Application/Common/Interfaces/ISlugService.cs
+- [X] T042 [P] Create IMarkdownService interface in backend/src/TechCommunity.Application/Common/Interfaces/IMarkdownService.cs
+- [X] T043 [P] Create ICacheService interface in backend/src/TechCommunity.Application/Common/Interfaces/ICacheService.cs
+- [X] T044 Setup MediatR pipeline behaviors in backend/src/TechCommunity.Application/Common/Behaviors/
+- [X] T045 [P] Create ValidationBehavior in backend/src/TechCommunity.Application/Common/Behaviors/ValidationBehavior.cs
+- [X] T046 [P] Create LoggingBehavior in backend/src/TechCommunity.Application/Common/Behaviors/LoggingBehavior.cs
+- [X] T047 Create custom exceptions in backend/src/TechCommunity.Application/Common/Exceptions/
+- [X] T048 [P] Create NotFoundException in backend/src/TechCommunity.Application/Common/Exceptions/NotFoundException.cs
+- [X] T049 [P] Create ValidationException in backend/src/TechCommunity.Application/Common/Exceptions/ValidationException.cs
+- [X] T050 [P] Create ForbiddenException in backend/src/TechCommunity.Application/Common/Exceptions/ForbiddenException.cs
+- [X] T051 [P] Create UnauthorizedException in backend/src/TechCommunity.Application/Common/Exceptions/UnauthorizedException.cs
+- [X] T052 Implement JwtService in backend/src/TechCommunity.Infrastructure/Services/Identity/JwtService.cs
+- [X] T052a Configure JWT expiry (30min access, 7day refresh) and session timeout (FR-005) in backend/src/TechCommunity.API/appsettings.json
+- [X] T053 [P] Implement SlugService (Turkish char support) in backend/src/TechCommunity.Infrastructure/Services/SlugService.cs
+- [X] T054 [P] Implement MarkdownService in backend/src/TechCommunity.Infrastructure/Services/MarkdownService.cs
+- [X] T055 [P] Implement CacheService (IMemoryCache) in backend/src/TechCommunity.Infrastructure/Services/Caching/CacheService.cs
+- [X] T056 [P] Implement CurrentUserService in backend/src/TechCommunity.Infrastructure/Services/Identity/CurrentUserService.cs
+- [X] T057 Create DependencyInjection for Infrastructure in backend/src/TechCommunity.Infrastructure/DependencyInjection.cs
+- [X] T058 Create DependencyInjection for Application in backend/src/TechCommunity.Application/DependencyInjection.cs
+- [X] T059 Setup Program.cs with DI, CORS, JWT auth in backend/src/TechCommunity.API/Program.cs
+- [X] T060 Create global exception handler middleware in backend/src/TechCommunity.API/Middleware/ExceptionHandlingMiddleware.cs
+- [X] T061 [P] Create standard API response wrapper in backend/src/TechCommunity.API/Models/ApiResponse.cs
+- [X] T062 [P] Create pagination request/response models in backend/src/TechCommunity.Application/Common/Models/PaginatedList.cs
+- [X] T063 Configure rate limiting middleware in backend/src/TechCommunity.API/Program.cs
+- [X] T064 Configure Swagger/OpenAPI in backend/src/TechCommunity.API/Program.cs
 
 ### Frontend Core Infrastructure
 
-- [ ] T065 Create core module structure in frontend/src/app/core/
-- [ ] T066 [P] Create AuthService with JWT handling in frontend/src/app/core/auth/auth.service.ts
-- [ ] T067 [P] Create AuthInterceptor for token injection in frontend/src/app/core/interceptors/auth.interceptor.ts
-- [ ] T068 [P] Create ErrorInterceptor for global error handling in frontend/src/app/core/interceptors/error.interceptor.ts
-- [ ] T069 [P] Create AuthGuard for protected routes in frontend/src/app/core/guards/auth.guard.ts
-- [ ] T070 [P] Create AdminGuard for admin routes in frontend/src/app/core/guards/admin.guard.ts
-- [ ] T071 [P] Create ApiService base class in frontend/src/app/core/services/api.service.ts
-- [ ] T072 Create shared module structure in frontend/src/app/shared/
-- [ ] T073 [P] Create LoadingSpinnerComponent in frontend/src/app/shared/components/loading-spinner/
-- [ ] T074 [P] Create PaginationComponent in frontend/src/app/shared/components/pagination/
-- [ ] T075 [P] Create MarkdownViewerComponent in frontend/src/app/shared/components/markdown-viewer/
-- [ ] T076 [P] Create TagListComponent in frontend/src/app/shared/components/tag-list/
-- [ ] T077 [P] Create UserAvatarComponent in frontend/src/app/shared/components/user-avatar/
-- [ ] T078 [P] Create TimeAgoPipe in frontend/src/app/shared/pipes/time-ago.pipe.ts
-- [ ] T079 [P] Create TruncatePipe in frontend/src/app/shared/pipes/truncate.pipe.ts
-- [ ] T080 Create main layout component in frontend/src/app/layouts/main-layout/
-- [ ] T081 [P] Create HeaderComponent in frontend/src/app/layouts/main-layout/header/
-- [ ] T082 [P] Create FooterComponent in frontend/src/app/layouts/main-layout/footer/
-- [ ] T083 [P] Create SidebarComponent in frontend/src/app/layouts/main-layout/sidebar/
-- [ ] T084 Configure SSR with Angular Universal in frontend/angular.json and frontend/server.ts
-- [ ] T085 Setup SEO service for dynamic meta tags in frontend/src/app/core/services/seo.service.ts
+- [X] T065 Create core module structure in frontend/src/app/core/
+- [X] T066 [P] Create AuthService with JWT handling in frontend/src/app/core/auth/auth.service.ts
+- [X] T067 [P] Create AuthInterceptor for token injection in frontend/src/app/core/interceptors/auth.interceptor.ts
+- [X] T068 [P] Create ErrorInterceptor for global error handling in frontend/src/app/core/interceptors/error.interceptor.ts
+- [X] T069 [P] Create AuthGuard for protected routes in frontend/src/app/core/guards/auth.guard.ts
+- [X] T070 [P] Create AdminGuard for admin routes in frontend/src/app/core/guards/admin.guard.ts
+- [X] T071 [P] Create ApiService base class in frontend/src/app/core/services/api.service.ts
+- [X] T072 Create shared module structure in frontend/src/app/shared/
+- [X] T073 [P] Create LoadingSpinnerComponent in frontend/src/app/shared/components/loading-spinner/
+- [X] T074 [P] Create PaginationComponent in frontend/src/app/shared/components/pagination/
+- [X] T075 [P] Create MarkdownViewerComponent in frontend/src/app/shared/components/markdown-viewer/
+- [X] T076 [P] Create TagListComponent in frontend/src/app/shared/components/tag-list/
+- [X] T077 [P] Create UserAvatarComponent in frontend/src/app/shared/components/user-avatar/
+- [X] T078 [P] Create TimeAgoPipe in frontend/src/app/shared/pipes/time-ago.pipe.ts
+- [X] T079 [P] Create TruncatePipe in frontend/src/app/shared/pipes/truncate.pipe.ts
+- [X] T080 Create main layout component in frontend/src/app/layouts/main-layout/
+- [X] T081 [P] Create HeaderComponent in frontend/src/app/layouts/main-layout/header/
+- [X] T082 [P] Create FooterComponent in frontend/src/app/layouts/main-layout/footer/
+- [X] T083 [P] Create SidebarComponent in frontend/src/app/layouts/main-layout/sidebar/
+- [X] T084 Configure SSR with Angular Universal in frontend/angular.json and frontend/server.ts
+- [X] T085 Setup SEO service for dynamic meta tags in frontend/src/app/core/services/seo.service.ts
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 
@@ -140,61 +140,61 @@
 
 ### Backend - Auth Feature
 
-- [ ] T086 [P] [US1] Create RegisterCommand in backend/src/TechCommunity.Application/Features/Auth/Commands/Register/RegisterCommand.cs
-- [ ] T087 [P] [US1] Create RegisterCommandValidator in backend/src/TechCommunity.Application/Features/Auth/Commands/Register/RegisterCommandValidator.cs
-- [ ] T088 [US1] Create RegisterCommandHandler in backend/src/TechCommunity.Application/Features/Auth/Commands/Register/RegisterCommandHandler.cs
-- [ ] T089 [P] [US1] Create LoginCommand in backend/src/TechCommunity.Application/Features/Auth/Commands/Login/LoginCommand.cs
-- [ ] T090 [P] [US1] Create LoginCommandValidator in backend/src/TechCommunity.Application/Features/Auth/Commands/Login/LoginCommandValidator.cs
-- [ ] T091 [US1] Create LoginCommandHandler in backend/src/TechCommunity.Application/Features/Auth/Commands/Login/LoginCommandHandler.cs
-- [ ] T092 [P] [US1] Create RefreshTokenCommand in backend/src/TechCommunity.Application/Features/Auth/Commands/RefreshToken/RefreshTokenCommand.cs
-- [ ] T093 [US1] Create RefreshTokenCommandHandler in backend/src/TechCommunity.Application/Features/Auth/Commands/RefreshToken/RefreshTokenCommandHandler.cs
-- [ ] T094 [P] [US1] Create LogoutCommand in backend/src/TechCommunity.Application/Features/Auth/Commands/Logout/LogoutCommand.cs
-- [ ] T095 [US1] Create LogoutCommandHandler in backend/src/TechCommunity.Application/Features/Auth/Commands/Logout/LogoutCommandHandler.cs
-- [ ] T095a [P] [US1] Create ForgotPasswordCommand in backend/src/TechCommunity.Application/Features/Auth/Commands/ForgotPassword/ForgotPasswordCommand.cs
-- [ ] T095b [P] [US1] Create ForgotPasswordCommandValidator in backend/src/TechCommunity.Application/Features/Auth/Commands/ForgotPassword/ForgotPasswordCommandValidator.cs
-- [ ] T095c [US1] Create ForgotPasswordCommandHandler (generate reset token, send email) in backend/src/TechCommunity.Application/Features/Auth/Commands/ForgotPassword/ForgotPasswordCommandHandler.cs
-- [ ] T095d [P] [US1] Create ResetPasswordCommand in backend/src/TechCommunity.Application/Features/Auth/Commands/ResetPassword/ResetPasswordCommand.cs
-- [ ] T095e [P] [US1] Create ResetPasswordCommandValidator in backend/src/TechCommunity.Application/Features/Auth/Commands/ResetPassword/ResetPasswordCommandValidator.cs
-- [ ] T095f [US1] Create ResetPasswordCommandHandler in backend/src/TechCommunity.Application/Features/Auth/Commands/ResetPassword/ResetPasswordCommandHandler.cs
-- [ ] T096 [P] [US1] Create AuthDto in backend/src/TechCommunity.Application/Features/Auth/DTOs/AuthDto.cs
-- [ ] T097 [US1] Create AuthController in backend/src/TechCommunity.API/Controllers/AuthController.cs
+- [X] T086 [P] [US1] Create RegisterCommand in backend/src/TechCommunity.Application/Features/Auth/Commands/Register/RegisterCommand.cs
+- [X] T087 [P] [US1] Create RegisterCommandValidator in backend/src/TechCommunity.Application/Features/Auth/Commands/Register/RegisterCommandValidator.cs
+- [X] T088 [US1] Create RegisterCommandHandler in backend/src/TechCommunity.Application/Features/Auth/Commands/Register/RegisterCommandHandler.cs
+- [X] T089 [P] [US1] Create LoginCommand in backend/src/TechCommunity.Application/Features/Auth/Commands/Login/LoginCommand.cs
+- [X] T090 [P] [US1] Create LoginCommandValidator in backend/src/TechCommunity.Application/Features/Auth/Commands/Login/LoginCommandValidator.cs
+- [X] T091 [US1] Create LoginCommandHandler in backend/src/TechCommunity.Application/Features/Auth/Commands/Login/LoginCommandHandler.cs
+- [X] T092 [P] [US1] Create RefreshTokenCommand in backend/src/TechCommunity.Application/Features/Auth/Commands/RefreshToken/RefreshTokenCommand.cs
+- [X] T093 [US1] Create RefreshTokenCommandHandler in backend/src/TechCommunity.Application/Features/Auth/Commands/RefreshToken/RefreshTokenCommandHandler.cs
+- [X] T094 [P] [US1] Create LogoutCommand in backend/src/TechCommunity.Application/Features/Auth/Commands/Logout/LogoutCommand.cs
+- [X] T095 [US1] Create LogoutCommandHandler in backend/src/TechCommunity.Application/Features/Auth/Commands/Logout/LogoutCommandHandler.cs
+- [X] T095a [P] [US1] Create ForgotPasswordCommand in backend/src/TechCommunity.Application/Features/Auth/Commands/ForgotPassword/ForgotPasswordCommand.cs
+- [X] T095b [P] [US1] Create ForgotPasswordCommandValidator in backend/src/TechCommunity.Application/Features/Auth/Commands/ForgotPassword/ForgotPasswordCommandValidator.cs
+- [X] T095c [US1] Create ForgotPasswordCommandHandler (generate reset token, send email) in backend/src/TechCommunity.Application/Features/Auth/Commands/ForgotPassword/ForgotPasswordCommandHandler.cs
+- [X] T095d [P] [US1] Create ResetPasswordCommand in backend/src/TechCommunity.Application/Features/Auth/Commands/ResetPassword/ResetPasswordCommand.cs
+- [X] T095e [P] [US1] Create ResetPasswordCommandValidator in backend/src/TechCommunity.Application/Features/Auth/Commands/ResetPassword/ResetPasswordCommandValidator.cs
+- [X] T095f [US1] Create ResetPasswordCommandHandler in backend/src/TechCommunity.Application/Features/Auth/Commands/ResetPassword/ResetPasswordCommandHandler.cs
+- [X] T096 [P] [US1] Create AuthDto in backend/src/TechCommunity.Application/Features/Auth/DTOs/AuthDto.cs
+- [X] T097 [US1] Create AuthController in backend/src/TechCommunity.API/Controllers/AuthController.cs
 
 ### Backend - Users Feature
 
-- [ ] T098 [P] [US1] Create GetCurrentUserQuery in backend/src/TechCommunity.Application/Features/Users/Queries/GetCurrentUser/GetCurrentUserQuery.cs
-- [ ] T099 [US1] Create GetCurrentUserQueryHandler in backend/src/TechCommunity.Application/Features/Users/Queries/GetCurrentUser/GetCurrentUserQueryHandler.cs
-- [ ] T100 [P] [US1] Create UpdateProfileCommand in backend/src/TechCommunity.Application/Features/Users/Commands/UpdateProfile/UpdateProfileCommand.cs
-- [ ] T101 [P] [US1] Create UpdateProfileCommandValidator in backend/src/TechCommunity.Application/Features/Users/Commands/UpdateProfile/UpdateProfileCommandValidator.cs
-- [ ] T102 [US1] Create UpdateProfileCommandHandler in backend/src/TechCommunity.Application/Features/Users/Commands/UpdateProfile/UpdateProfileCommandHandler.cs
-- [ ] T103 [P] [US1] Create UploadAvatarCommand in backend/src/TechCommunity.Application/Features/Users/Commands/UploadAvatar/UploadAvatarCommand.cs
-- [ ] T104 [US1] Create UploadAvatarCommandHandler in backend/src/TechCommunity.Application/Features/Users/Commands/UploadAvatar/UploadAvatarCommandHandler.cs
-- [ ] T105 [P] [US1] Create UserProfileDto in backend/src/TechCommunity.Application/Features/Users/DTOs/UserProfileDto.cs
-- [ ] T106 [P] [US1] Create UserSummaryDto in backend/src/TechCommunity.Application/Features/Users/DTOs/UserSummaryDto.cs
-- [ ] T107 [US1] Implement IFileStorageService interface and local storage in backend/src/TechCommunity.Infrastructure/Services/FileStorage/
-- [ ] T108 [US1] Create UsersController in backend/src/TechCommunity.API/Controllers/UsersController.cs
+- [X] T098 [P] [US1] Create GetCurrentUserQuery in backend/src/TechCommunity.Application/Features/Users/Queries/GetCurrentUser/GetCurrentUserQuery.cs
+- [X] T099 [US1] Create GetCurrentUserQueryHandler in backend/src/TechCommunity.Application/Features/Users/Queries/GetCurrentUser/GetCurrentUserQueryHandler.cs
+- [X] T100 [P] [US1] Create UpdateProfileCommand in backend/src/TechCommunity.Application/Features/Users/Commands/UpdateProfile/UpdateProfileCommand.cs
+- [X] T101 [P] [US1] Create UpdateProfileCommandValidator in backend/src/TechCommunity.Application/Features/Users/Commands/UpdateProfile/UpdateProfileCommandValidator.cs
+- [X] T102 [US1] Create UpdateProfileCommandHandler in backend/src/TechCommunity.Application/Features/Users/Commands/UpdateProfile/UpdateProfileCommandHandler.cs
+- [X] T103 [P] [US1] Create UploadAvatarCommand in backend/src/TechCommunity.Application/Features/Users/Commands/UploadAvatar/UploadAvatarCommand.cs
+- [X] T104 [US1] Create UploadAvatarCommandHandler in backend/src/TechCommunity.Application/Features/Users/Commands/UploadAvatar/UploadAvatarCommandHandler.cs
+- [X] T105 [P] [US1] Create UserProfileDto in backend/src/TechCommunity.Application/Features/Users/DTOs/UserProfileDto.cs
+- [X] T106 [P] [US1] Create UserSummaryDto in backend/src/TechCommunity.Application/Features/Users/DTOs/UserSummaryDto.cs
+- [X] T107 [US1] Implement IFileStorageService interface and local storage in backend/src/TechCommunity.Infrastructure/Services/FileStorage/
+- [X] T108 [US1] Create UsersController in backend/src/TechCommunity.API/Controllers/UsersController.cs
 
 ### Frontend - Auth Feature
 
-- [ ] T109 [P] [US1] Create auth feature module in frontend/src/app/features/auth/
-- [ ] T110 [P] [US1] Create auth routes in frontend/src/app/features/auth/auth.routes.ts
-- [ ] T111 [P] [US1] Create RegisterComponent in frontend/src/app/features/auth/register/register.component.ts
-- [ ] T112 [P] [US1] Create LoginComponent in frontend/src/app/features/auth/login/login.component.ts
-- [ ] T112a [P] [US1] Create ForgotPasswordComponent in frontend/src/app/features/auth/forgot-password/forgot-password.component.ts
-- [ ] T112b [P] [US1] Create ResetPasswordComponent in frontend/src/app/features/auth/reset-password/reset-password.component.ts
-- [ ] T113 [P] [US1] Create auth state signal service in frontend/src/app/features/auth/auth-state.service.ts
-- [ ] T114 [US1] Integrate AuthService with backend API endpoints
+- [X] T109 [P] [US1] Create auth feature module in frontend/src/app/features/auth/
+- [X] T110 [P] [US1] Create auth routes in frontend/src/app/features/auth/auth.routes.ts
+- [X] T111 [P] [US1] Create RegisterComponent in frontend/src/app/features/auth/register/register.component.ts
+- [X] T112 [P] [US1] Create LoginComponent in frontend/src/app/features/auth/login/login.component.ts
+- [X] T112a [P] [US1] Create ForgotPasswordComponent in frontend/src/app/features/auth/forgot-password/forgot-password.component.ts
+- [X] T112b [P] [US1] Create ResetPasswordComponent in frontend/src/app/features/auth/reset-password/reset-password.component.ts
+- [X] T113 [P] [US1] Create auth state signal service in frontend/src/app/features/auth/auth-state.service.ts
+- [X] T114 [US1] Integrate AuthService with backend API endpoints
 
 ### Frontend - Profile Feature
 
-- [ ] T115 [P] [US1] Create profile feature module in frontend/src/app/features/profile/
-- [ ] T116 [P] [US1] Create profile routes in frontend/src/app/features/profile/profile.routes.ts
-- [ ] T117 [P] [US1] Create ProfileViewComponent in frontend/src/app/features/profile/profile-view/profile-view.component.ts
-- [ ] T118 [P] [US1] Create ProfileEditComponent in frontend/src/app/features/profile/profile-edit/profile-edit.component.ts
-- [ ] T119 [P] [US1] Create AvatarUploadComponent in frontend/src/app/features/profile/avatar-upload/avatar-upload.component.ts
-- [ ] T120 [US1] Create ProfileService in frontend/src/app/features/profile/profile.service.ts
-- [ ] T121 [US1] Setup SSR meta tags for profile pages in ProfileViewComponent
+- [X] T115 [P] [US1] Create profile feature module in frontend/src/app/features/profile/
+- [X] T116 [P] [US1] Create profile routes in frontend/src/app/features/profile/profile.routes.ts
+- [X] T117 [P] [US1] Create ProfileViewComponent in frontend/src/app/features/profile/profile-view/profile-view.component.ts
+- [X] T118 [P] [US1] Create ProfileEditComponent in frontend/src/app/features/profile/profile-edit/profile-edit.component.ts
+- [X] T119 [P] [US1] Create AvatarUploadComponent in frontend/src/app/features/profile/avatar-upload/avatar-upload.component.ts
+- [X] T120 [US1] Create ProfileService in frontend/src/app/features/profile/profile.service.ts
+- [X] T121 [US1] Setup SSR meta tags for profile pages in ProfileViewComponent
 
-**Checkpoint**: User Story 1 complete - Users can register, login, and manage profiles
+**Checkpoint**: User Story 1 complete ✓ - Users can register, login, and manage profiles
 
 ---
 
@@ -206,49 +206,49 @@
 
 ### Backend - Posts Feature
 
-- [ ] T122 [P] [US2] Create CreatePostCommand in backend/src/TechCommunity.Application/Features/Posts/Commands/CreatePost/CreatePostCommand.cs
-- [ ] T123 [P] [US2] Create CreatePostCommandValidator in backend/src/TechCommunity.Application/Features/Posts/Commands/CreatePost/CreatePostCommandValidator.cs
-- [ ] T124 [US2] Create CreatePostCommandHandler in backend/src/TechCommunity.Application/Features/Posts/Commands/CreatePost/CreatePostCommandHandler.cs
-- [ ] T125 [P] [US2] Create UpdatePostCommand in backend/src/TechCommunity.Application/Features/Posts/Commands/UpdatePost/UpdatePostCommand.cs
-- [ ] T126 [US2] Create UpdatePostCommandHandler in backend/src/TechCommunity.Application/Features/Posts/Commands/UpdatePost/UpdatePostCommandHandler.cs
-- [ ] T127 [P] [US2] Create DeletePostCommand in backend/src/TechCommunity.Application/Features/Posts/Commands/DeletePost/DeletePostCommand.cs
-- [ ] T128 [US2] Create DeletePostCommandHandler in backend/src/TechCommunity.Application/Features/Posts/Commands/DeletePost/DeletePostCommandHandler.cs
-- [ ] T129 [P] [US2] Create GetPostsQuery (paginated) in backend/src/TechCommunity.Application/Features/Posts/Queries/GetPosts/GetPostsQuery.cs
-- [ ] T130 [US2] Create GetPostsQueryHandler in backend/src/TechCommunity.Application/Features/Posts/Queries/GetPosts/GetPostsQueryHandler.cs
-- [ ] T131 [P] [US2] Create GetPostByIdQuery in backend/src/TechCommunity.Application/Features/Posts/Queries/GetPostById/GetPostByIdQuery.cs
-- [ ] T132 [US2] Create GetPostByIdQueryHandler with view count increment in backend/src/TechCommunity.Application/Features/Posts/Queries/GetPostById/GetPostByIdQueryHandler.cs
-- [ ] T133 [P] [US2] Create PostDto in backend/src/TechCommunity.Application/Features/Posts/DTOs/PostDto.cs
-- [ ] T134 [P] [US2] Create PostDetailDto in backend/src/TechCommunity.Application/Features/Posts/DTOs/PostDetailDto.cs
-- [ ] T135 [US2] Create PostsController in backend/src/TechCommunity.API/Controllers/PostsController.cs
+- [X] T122 [P] [US2] Create CreatePostCommand in backend/src/TechCommunity.Application/Features/Posts/Commands/CreatePost/CreatePostCommand.cs
+- [X] T123 [P] [US2] Create CreatePostCommandValidator in backend/src/TechCommunity.Application/Features/Posts/Commands/CreatePost/CreatePostCommandValidator.cs
+- [X] T124 [US2] Create CreatePostCommandHandler in backend/src/TechCommunity.Application/Features/Posts/Commands/CreatePost/CreatePostCommandHandler.cs
+- [X] T125 [P] [US2] Create UpdatePostCommand in backend/src/TechCommunity.Application/Features/Posts/Commands/UpdatePost/UpdatePostCommand.cs
+- [X] T126 [US2] Create UpdatePostCommandHandler in backend/src/TechCommunity.Application/Features/Posts/Commands/UpdatePost/UpdatePostCommandHandler.cs
+- [X] T127 [P] [US2] Create DeletePostCommand in backend/src/TechCommunity.Application/Features/Posts/Commands/DeletePost/DeletePostCommand.cs
+- [X] T128 [US2] Create DeletePostCommandHandler in backend/src/TechCommunity.Application/Features/Posts/Commands/DeletePost/DeletePostCommandHandler.cs
+- [X] T129 [P] [US2] Create GetPostsQuery (paginated) in backend/src/TechCommunity.Application/Features/Posts/Queries/GetPosts/GetPostsQuery.cs
+- [X] T130 [US2] Create GetPostsQueryHandler in backend/src/TechCommunity.Application/Features/Posts/Queries/GetPosts/GetPostsQueryHandler.cs
+- [X] T131 [P] [US2] Create GetPostByIdQuery in backend/src/TechCommunity.Application/Features/Posts/Queries/GetPostById/GetPostByIdQuery.cs
+- [X] T132 [US2] Create GetPostByIdQueryHandler with view count increment in backend/src/TechCommunity.Application/Features/Posts/Queries/GetPostById/GetPostByIdQueryHandler.cs
+- [X] T133 [P] [US2] Create PostDto in backend/src/TechCommunity.Application/Features/Posts/DTOs/PostDto.cs
+- [X] T134 [P] [US2] Create PostDetailDto in backend/src/TechCommunity.Application/Features/Posts/DTOs/PostDetailDto.cs
+- [X] T135 [US2] Create PostsController in backend/src/TechCommunity.API/Controllers/PostsController.cs
 
 ### Backend - Comments Feature (for Posts)
 
-- [ ] T136 [P] [US2] Create AddCommentCommand in backend/src/TechCommunity.Application/Features/Comments/Commands/AddComment/AddCommentCommand.cs
-- [ ] T137 [P] [US2] Create AddCommentCommandValidator in backend/src/TechCommunity.Application/Features/Comments/Commands/AddComment/AddCommentCommandValidator.cs
-- [ ] T138 [US2] Create AddCommentCommandHandler in backend/src/TechCommunity.Application/Features/Comments/Commands/AddComment/AddCommentCommandHandler.cs
-- [ ] T139 [P] [US2] Create UpdateCommentCommand in backend/src/TechCommunity.Application/Features/Comments/Commands/UpdateComment/UpdateCommentCommand.cs
-- [ ] T140 [US2] Create UpdateCommentCommandHandler in backend/src/TechCommunity.Application/Features/Comments/Commands/UpdateComment/UpdateCommentCommandHandler.cs
-- [ ] T141 [P] [US2] Create DeleteCommentCommand in backend/src/TechCommunity.Application/Features/Comments/Commands/DeleteComment/DeleteCommentCommand.cs
-- [ ] T142 [US2] Create DeleteCommentCommandHandler in backend/src/TechCommunity.Application/Features/Comments/Commands/DeleteComment/DeleteCommentCommandHandler.cs
-- [ ] T143 [P] [US2] Create GetCommentsQuery in backend/src/TechCommunity.Application/Features/Comments/Queries/GetComments/GetCommentsQuery.cs
-- [ ] T144 [US2] Create GetCommentsQueryHandler in backend/src/TechCommunity.Application/Features/Comments/Queries/GetComments/GetCommentsQueryHandler.cs
-- [ ] T145 [P] [US2] Create CommentDto in backend/src/TechCommunity.Application/Features/Comments/DTOs/CommentDto.cs
-- [ ] T146 [US2] Create CommentsController in backend/src/TechCommunity.API/Controllers/CommentsController.cs
+- [X] T136 [P] [US2] Create AddCommentCommand in backend/src/TechCommunity.Application/Features/Comments/Commands/AddComment/AddCommentCommand.cs
+- [X] T137 [P] [US2] Create AddCommentCommandValidator in backend/src/TechCommunity.Application/Features/Comments/Commands/AddComment/AddCommentCommandValidator.cs
+- [X] T138 [US2] Create AddCommentCommandHandler in backend/src/TechCommunity.Application/Features/Comments/Commands/AddComment/AddCommentCommandHandler.cs
+- [X] T139 [P] [US2] Create UpdateCommentCommand in backend/src/TechCommunity.Application/Features/Comments/Commands/UpdateComment/UpdateCommentCommand.cs
+- [X] T140 [US2] Create UpdateCommentCommandHandler in backend/src/TechCommunity.Application/Features/Comments/Commands/UpdateComment/UpdateCommentCommandHandler.cs
+- [X] T141 [P] [US2] Create DeleteCommentCommand in backend/src/TechCommunity.Application/Features/Comments/Commands/DeleteComment/DeleteCommentCommand.cs
+- [X] T142 [US2] Create DeleteCommentCommandHandler in backend/src/TechCommunity.Application/Features/Comments/Commands/DeleteComment/DeleteCommentCommandHandler.cs
+- [X] T143 [P] [US2] Create GetCommentsQuery in backend/src/TechCommunity.Application/Features/Comments/Queries/GetComments/GetCommentsQuery.cs
+- [X] T144 [US2] Create GetCommentsQueryHandler in backend/src/TechCommunity.Application/Features/Comments/Queries/GetComments/GetCommentsQueryHandler.cs
+- [X] T145 [P] [US2] Create CommentDto in backend/src/TechCommunity.Application/Features/Comments/DTOs/CommentDto.cs
+- [X] T146 [US2] Create CommentsController in backend/src/TechCommunity.API/Controllers/CommentsController.cs
 
 ### Frontend - Posts Feature
 
-- [ ] T147 [P] [US2] Create posts feature module in frontend/src/app/features/posts/
-- [ ] T148 [P] [US2] Create posts routes in frontend/src/app/features/posts/posts.routes.ts
-- [ ] T149 [P] [US2] Create PostListComponent in frontend/src/app/features/posts/post-list/post-list.component.ts
-- [ ] T150 [P] [US2] Create PostDetailComponent in frontend/src/app/features/posts/post-detail/post-detail.component.ts
-- [ ] T151 [P] [US2] Create PostFormComponent in frontend/src/app/features/posts/post-form/post-form.component.ts
-- [ ] T152 [P] [US2] Create PostCardComponent in frontend/src/app/features/posts/post-card/post-card.component.ts
-- [ ] T153 [P] [US2] Create CommentListComponent in frontend/src/app/shared/components/comment-list/
-- [ ] T154 [P] [US2] Create CommentFormComponent in frontend/src/app/shared/components/comment-form/
-- [ ] T155 [US2] Create PostsService in frontend/src/app/features/posts/posts.service.ts
-- [ ] T156 [US2] Create CommentsService in frontend/src/app/core/services/comments.service.ts
-- [ ] T157 [US2] Setup SSR meta tags for post pages (title, description, og:tags)
-- [ ] T158 [US2] Integrate MarkdownEditor component in PostFormComponent
+- [X] T147 [P] [US2] Create posts feature module in frontend/src/app/features/posts/
+- [X] T148 [P] [US2] Create posts routes in frontend/src/app/features/posts/posts.routes.ts
+- [X] T149 [P] [US2] Create PostListComponent in frontend/src/app/features/posts/post-list/post-list.component.ts
+- [X] T150 [P] [US2] Create PostDetailComponent in frontend/src/app/features/posts/post-detail/post-detail.component.ts
+- [X] T151 [P] [US2] Create PostFormComponent in frontend/src/app/features/posts/post-form/post-form.component.ts
+- [X] T152 [P] [US2] Create PostCardComponent in frontend/src/app/features/posts/post-card/post-card.component.ts
+- [X] T153 [P] [US2] Create CommentListComponent in frontend/src/app/shared/components/comment-list/
+- [X] T154 [P] [US2] Create CommentFormComponent in frontend/src/app/shared/components/comment-form/
+- [X] T155 [US2] Create PostsService in frontend/src/app/features/posts/posts.service.ts
+- [X] T156 [US2] Create CommentsService in frontend/src/app/core/services/comments.service.ts
+- [X] T157 [US2] Setup SSR meta tags for post pages (title, description, og:tags)
+- [X] T158 [US2] Integrate MarkdownEditor component in PostFormComponent
 
 **Checkpoint**: User Story 2 complete - Users can create, read, and comment on posts
 
@@ -262,51 +262,51 @@
 
 ### Backend - Questions Feature
 
-- [ ] T159 [P] [US3] Create CreateQuestionCommand in backend/src/TechCommunity.Application/Features/Questions/Commands/CreateQuestion/CreateQuestionCommand.cs
-- [ ] T160 [P] [US3] Create CreateQuestionCommandValidator in backend/src/TechCommunity.Application/Features/Questions/Commands/CreateQuestion/CreateQuestionCommandValidator.cs
-- [ ] T161 [US3] Create CreateQuestionCommandHandler in backend/src/TechCommunity.Application/Features/Questions/Commands/CreateQuestion/CreateQuestionCommandHandler.cs
-- [ ] T162 [P] [US3] Create UpdateQuestionCommand in backend/src/TechCommunity.Application/Features/Questions/Commands/UpdateQuestion/UpdateQuestionCommand.cs
-- [ ] T163 [US3] Create UpdateQuestionCommandHandler in backend/src/TechCommunity.Application/Features/Questions/Commands/UpdateQuestion/UpdateQuestionCommandHandler.cs
-- [ ] T164 [P] [US3] Create DeleteQuestionCommand in backend/src/TechCommunity.Application/Features/Questions/Commands/DeleteQuestion/DeleteQuestionCommand.cs
-- [ ] T165 [US3] Create DeleteQuestionCommandHandler in backend/src/TechCommunity.Application/Features/Questions/Commands/DeleteQuestion/DeleteQuestionCommandHandler.cs
-- [ ] T166 [P] [US3] Create GetQuestionsQuery in backend/src/TechCommunity.Application/Features/Questions/Queries/GetQuestions/GetQuestionsQuery.cs
-- [ ] T167 [US3] Create GetQuestionsQueryHandler in backend/src/TechCommunity.Application/Features/Questions/Queries/GetQuestions/GetQuestionsQueryHandler.cs
-- [ ] T168 [P] [US3] Create GetQuestionByIdQuery in backend/src/TechCommunity.Application/Features/Questions/Queries/GetQuestionById/GetQuestionByIdQuery.cs
-- [ ] T169 [US3] Create GetQuestionByIdQueryHandler in backend/src/TechCommunity.Application/Features/Questions/Queries/GetQuestionById/GetQuestionByIdQueryHandler.cs
-- [ ] T170 [P] [US3] Create QuestionDto in backend/src/TechCommunity.Application/Features/Questions/DTOs/QuestionDto.cs
-- [ ] T171 [P] [US3] Create QuestionDetailDto in backend/src/TechCommunity.Application/Features/Questions/DTOs/QuestionDetailDto.cs
-- [ ] T172 [US3] Create QuestionsController in backend/src/TechCommunity.API/Controllers/QuestionsController.cs
+- [X] T159 [P] [US3] Create CreateQuestionCommand in backend/src/TechCommunity.Application/Features/Questions/Commands/CreateQuestion/CreateQuestionCommand.cs
+- [X] T160 [P] [US3] Create CreateQuestionCommandValidator in backend/src/TechCommunity.Application/Features/Questions/Commands/CreateQuestion/CreateQuestionCommandValidator.cs
+- [X] T161 [US3] Create CreateQuestionCommandHandler in backend/src/TechCommunity.Application/Features/Questions/Commands/CreateQuestion/CreateQuestionCommandHandler.cs
+- [X] T162 [P] [US3] Create UpdateQuestionCommand in backend/src/TechCommunity.Application/Features/Questions/Commands/UpdateQuestion/UpdateQuestionCommand.cs
+- [X] T163 [US3] Create UpdateQuestionCommandHandler in backend/src/TechCommunity.Application/Features/Questions/Commands/UpdateQuestion/UpdateQuestionCommandHandler.cs
+- [X] T164 [P] [US3] Create DeleteQuestionCommand in backend/src/TechCommunity.Application/Features/Questions/Commands/DeleteQuestion/DeleteQuestionCommand.cs
+- [X] T165 [US3] Create DeleteQuestionCommandHandler in backend/src/TechCommunity.Application/Features/Questions/Commands/DeleteQuestion/DeleteQuestionCommandHandler.cs
+- [X] T166 [P] [US3] Create GetQuestionsQuery in backend/src/TechCommunity.Application/Features/Questions/Queries/GetQuestions/GetQuestionsQuery.cs
+- [X] T167 [US3] Create GetQuestionsQueryHandler in backend/src/TechCommunity.Application/Features/Questions/Queries/GetQuestions/GetQuestionsQueryHandler.cs
+- [X] T168 [P] [US3] Create GetQuestionByIdQuery in backend/src/TechCommunity.Application/Features/Questions/Queries/GetQuestionById/GetQuestionByIdQuery.cs
+- [X] T169 [US3] Create GetQuestionByIdQueryHandler in backend/src/TechCommunity.Application/Features/Questions/Queries/GetQuestionById/GetQuestionByIdQueryHandler.cs
+- [X] T170 [P] [US3] Create QuestionDto in backend/src/TechCommunity.Application/Features/Questions/DTOs/QuestionDto.cs
+- [X] T171 [P] [US3] Create QuestionDetailDto in backend/src/TechCommunity.Application/Features/Questions/DTOs/QuestionDetailDto.cs
+- [X] T172 [US3] Create QuestionsController in backend/src/TechCommunity.API/Controllers/QuestionsController.cs
 
 ### Backend - Answers Feature
 
-- [ ] T173 [P] [US3] Create AddAnswerCommand in backend/src/TechCommunity.Application/Features/Answers/Commands/AddAnswer/AddAnswerCommand.cs
-- [ ] T174 [P] [US3] Create AddAnswerCommandValidator in backend/src/TechCommunity.Application/Features/Answers/Commands/AddAnswer/AddAnswerCommandValidator.cs
-- [ ] T175 [US3] Create AddAnswerCommandHandler (with AnswerCount update) in backend/src/TechCommunity.Application/Features/Answers/Commands/AddAnswer/AddAnswerCommandHandler.cs
-- [ ] T176 [P] [US3] Create UpdateAnswerCommand in backend/src/TechCommunity.Application/Features/Answers/Commands/UpdateAnswer/UpdateAnswerCommand.cs
-- [ ] T177 [US3] Create UpdateAnswerCommandHandler in backend/src/TechCommunity.Application/Features/Answers/Commands/UpdateAnswer/UpdateAnswerCommandHandler.cs
-- [ ] T178 [P] [US3] Create DeleteAnswerCommand in backend/src/TechCommunity.Application/Features/Answers/Commands/DeleteAnswer/DeleteAnswerCommand.cs
-- [ ] T179 [US3] Create DeleteAnswerCommandHandler in backend/src/TechCommunity.Application/Features/Answers/Commands/DeleteAnswer/DeleteAnswerCommandHandler.cs
-- [ ] T180 [P] [US3] Create AcceptAnswerCommand in backend/src/TechCommunity.Application/Features/Answers/Commands/AcceptAnswer/AcceptAnswerCommand.cs
-- [ ] T181 [US3] Create AcceptAnswerCommandHandler (unaccept previous, accept new) in backend/src/TechCommunity.Application/Features/Answers/Commands/AcceptAnswer/AcceptAnswerCommandHandler.cs
-- [ ] T182 [P] [US3] Create GetAnswersQuery in backend/src/TechCommunity.Application/Features/Answers/Queries/GetAnswers/GetAnswersQuery.cs
-- [ ] T183 [US3] Create GetAnswersQueryHandler in backend/src/TechCommunity.Application/Features/Answers/Queries/GetAnswers/GetAnswersQueryHandler.cs
-- [ ] T184 [P] [US3] Create AnswerDto in backend/src/TechCommunity.Application/Features/Answers/DTOs/AnswerDto.cs
-- [ ] T185 [US3] Create AnswersController in backend/src/TechCommunity.API/Controllers/AnswersController.cs
+- [X] T173 [P] [US3] Create AddAnswerCommand in backend/src/TechCommunity.Application/Features/Answers/Commands/AddAnswer/AddAnswerCommand.cs
+- [X] T174 [P] [US3] Create AddAnswerCommandValidator in backend/src/TechCommunity.Application/Features/Answers/Commands/AddAnswer/AddAnswerCommandValidator.cs
+- [X] T175 [US3] Create AddAnswerCommandHandler (with AnswerCount update) in backend/src/TechCommunity.Application/Features/Answers/Commands/AddAnswer/AddAnswerCommandHandler.cs
+- [X] T176 [P] [US3] Create UpdateAnswerCommand in backend/src/TechCommunity.Application/Features/Answers/Commands/UpdateAnswer/UpdateAnswerCommand.cs
+- [X] T177 [US3] Create UpdateAnswerCommandHandler in backend/src/TechCommunity.Application/Features/Answers/Commands/UpdateAnswer/UpdateAnswerCommandHandler.cs
+- [X] T178 [P] [US3] Create DeleteAnswerCommand in backend/src/TechCommunity.Application/Features/Answers/Commands/DeleteAnswer/DeleteAnswerCommand.cs
+- [X] T179 [US3] Create DeleteAnswerCommandHandler in backend/src/TechCommunity.Application/Features/Answers/Commands/DeleteAnswer/DeleteAnswerCommandHandler.cs
+- [X] T180 [P] [US3] Create AcceptAnswerCommand in backend/src/TechCommunity.Application/Features/Answers/Commands/AcceptAnswer/AcceptAnswerCommand.cs
+- [X] T181 [US3] Create AcceptAnswerCommandHandler (unaccept previous, accept new) in backend/src/TechCommunity.Application/Features/Answers/Commands/AcceptAnswer/AcceptAnswerCommandHandler.cs
+- [X] T182 [P] [US3] Create GetAnswersQuery in backend/src/TechCommunity.Application/Features/Answers/Queries/GetAnswers/GetAnswersQuery.cs
+- [X] T183 [US3] Create GetAnswersQueryHandler in backend/src/TechCommunity.Application/Features/Answers/Queries/GetAnswers/GetAnswersQueryHandler.cs
+- [X] T184 [P] [US3] Create AnswerDto in backend/src/TechCommunity.Application/Features/Answers/DTOs/AnswerDto.cs
+- [X] T185 [US3] Create AnswersController in backend/src/TechCommunity.API/Controllers/AnswersController.cs
 
 ### Frontend - Questions Feature
 
-- [ ] T186 [P] [US3] Create questions feature module in frontend/src/app/features/questions/
-- [ ] T187 [P] [US3] Create questions routes in frontend/src/app/features/questions/questions.routes.ts
-- [ ] T188 [P] [US3] Create QuestionListComponent in frontend/src/app/features/questions/question-list/question-list.component.ts
-- [ ] T189 [P] [US3] Create QuestionDetailComponent in frontend/src/app/features/questions/question-detail/question-detail.component.ts
-- [ ] T190 [P] [US3] Create QuestionFormComponent in frontend/src/app/features/questions/question-form/question-form.component.ts
-- [ ] T191 [P] [US3] Create QuestionCardComponent in frontend/src/app/features/questions/question-card/question-card.component.ts
-- [ ] T192 [P] [US3] Create AnswerListComponent in frontend/src/app/features/questions/answer-list/answer-list.component.ts
-- [ ] T193 [P] [US3] Create AnswerFormComponent in frontend/src/app/features/questions/answer-form/answer-form.component.ts
-- [ ] T194 [P] [US3] Create AnswerItemComponent (with accept button) in frontend/src/app/features/questions/answer-item/answer-item.component.ts
-- [ ] T195 [US3] Create QuestionsService in frontend/src/app/features/questions/questions.service.ts
-- [ ] T196 [US3] Create AnswersService in frontend/src/app/features/questions/answers.service.ts
-- [ ] T197 [US3] Setup SSR meta tags for question pages
+- [X] T186 [P] [US3] Create questions feature module in frontend/src/app/features/questions/
+- [X] T187 [P] [US3] Create questions routes in frontend/src/app/features/questions/questions.routes.ts
+- [X] T188 [P] [US3] Create QuestionListComponent in frontend/src/app/features/questions/question-list/question-list.component.ts
+- [X] T189 [P] [US3] Create QuestionDetailComponent in frontend/src/app/features/questions/question-detail/question-detail.component.ts
+- [X] T190 [P] [US3] Create QuestionFormComponent in frontend/src/app/features/questions/question-form/question-form.component.ts (implemented as question-ask)
+- [X] T191 [P] [US3] Create QuestionCardComponent in frontend/src/app/features/questions/question-card/question-card.component.ts
+- [X] T192 [P] [US3] Create AnswerListComponent in frontend/src/app/features/questions/answer-list/answer-list.component.ts (integrated in question-detail)
+- [X] T193 [P] [US3] Create AnswerFormComponent in frontend/src/app/features/questions/answer-form/answer-form.component.ts
+- [X] T194 [P] [US3] Create AnswerItemComponent (with accept button) in frontend/src/app/features/questions/answer-item/answer-item.component.ts
+- [X] T195 [US3] Create QuestionsService in frontend/src/app/features/questions/questions.service.ts
+- [X] T196 [US3] Create AnswersService in frontend/src/app/features/questions/answers.service.ts
+- [X] T197 [US3] Setup SSR meta tags for question pages
 
 **Checkpoint**: User Story 3 complete - Users can ask questions, answer, and accept answers
 
