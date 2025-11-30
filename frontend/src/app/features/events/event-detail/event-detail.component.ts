@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { Meta, Title } from '@angular/platform-browser';
 import { EventsService, EventDetailDto } from '../events.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
@@ -132,9 +133,42 @@ import { LoadingSpinnerComponent } from '../../../shared/components/loading-spin
 
               <!-- Actions -->
               <div class="sidebar-actions">
-                <button class="btn btn-primary btn-block">
-                  Kayıt Ol
-                </button>
+                @if (isLoggedIn()) {
+                  @if (isRegistered()) {
+                    <button 
+                      class="btn btn-registered btn-block" 
+                      (click)="cancelRegistration()"
+                      [disabled]="registering()"
+                    >
+                      @if (registering()) {
+                        İptal ediliyor...
+                      } @else {
+                        ✓ Kayıtlısınız - İptal Et
+                      }
+                    </button>
+                  } @else {
+                    <button 
+                      class="btn btn-primary btn-block" 
+                      (click)="registerForEvent()"
+                      [disabled]="registering()"
+                    >
+                      @if (registering()) {
+                        Kayıt yapılıyor...
+                      } @else {
+                        Kayıt Ol
+                      }
+                    </button>
+                  }
+                } @else {
+                  <a routerLink="/auth/login" [queryParams]="{returnUrl: currentUrl}" class="btn btn-primary btn-block">
+                    Kayıt Olmak İçin Giriş Yap
+                  </a>
+                }
+                @if (registrationMessage()) {
+                  <div class="registration-message" [class.success]="registrationSuccess()" [class.error]="!registrationSuccess()">
+                    {{ registrationMessage() }}
+                  </div>
+                }
                 <a routerLink="/events" class="btn btn-secondary btn-block">
                   ← Tüm Etkinlikler
                 </a>
@@ -493,6 +527,47 @@ import { LoadingSpinnerComponent } from '../../../shared/components/loading-spin
       box-shadow: 0 0 24px rgba(255, 109, 90, 0.4);
     }
 
+    .btn-primary:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .btn-registered {
+      background: rgba(34, 197, 94, 0.15);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      color: #22c55e;
+    }
+
+    .btn-registered:hover {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #ef4444;
+    }
+
+    .btn-registered:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .registration-message {
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      text-align: center;
+    }
+
+    .registration-message.success {
+      background: rgba(34, 197, 94, 0.15);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      color: #22c55e;
+    }
+
+    .registration-message.error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+    }
+
     .btn-secondary {
       background: var(--bg-secondary, #17171c);
       border: 1px solid var(--border-color, #2a2a35);
@@ -564,14 +639,24 @@ export class EventDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly eventsService = inject(EventsService);
+  private readonly authService = inject(AuthService);
   private readonly meta = inject(Meta);
   private readonly title = inject(Title);
 
   loading = signal(true);
   event = signal<EventDetailDto | null>(null);
   copied = signal(false);
+  
+  // Registration state
+  isRegistered = signal(false);
+  registering = signal(false);
+  registrationMessage = signal<string | null>(null);
+  registrationSuccess = signal(false);
 
   readonly defaultImage = 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800';
+
+  isLoggedIn = computed(() => this.authService.isAuthenticated());
+  currentUrl = '';
 
   eventTypeIcon = computed(() => {
     const e = this.event();
@@ -596,12 +681,62 @@ export class EventDetailComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    this.currentUrl = this.router.url;
     const slug = this.route.snapshot.paramMap.get('slug');
     if (slug) {
       this.loadEvent(slug);
     } else {
       this.loading.set(false);
     }
+  }
+
+  registerForEvent(): void {
+    const e = this.event();
+    if (!e || this.registering()) return;
+
+    this.registering.set(true);
+    this.registrationMessage.set(null);
+
+    this.eventsService.registerForEvent(e.id).subscribe({
+      next: (response) => {
+        this.isRegistered.set(true);
+        this.registrationSuccess.set(true);
+        this.registrationMessage.set(response.message);
+        this.registering.set(false);
+        
+        // Clear message after 5 seconds
+        setTimeout(() => this.registrationMessage.set(null), 5000);
+      },
+      error: (err) => {
+        this.registrationSuccess.set(false);
+        this.registrationMessage.set(err.error?.message || 'Kayıt sırasında bir hata oluştu.');
+        this.registering.set(false);
+      }
+    });
+  }
+
+  cancelRegistration(): void {
+    const e = this.event();
+    if (!e || this.registering()) return;
+
+    this.registering.set(true);
+    this.registrationMessage.set(null);
+
+    this.eventsService.cancelRegistration(e.id).subscribe({
+      next: (response) => {
+        this.isRegistered.set(false);
+        this.registrationSuccess.set(true);
+        this.registrationMessage.set(response.message);
+        this.registering.set(false);
+        
+        setTimeout(() => this.registrationMessage.set(null), 5000);
+      },
+      error: (err) => {
+        this.registrationSuccess.set(false);
+        this.registrationMessage.set(err.error?.message || 'İptal sırasında bir hata oluştu.');
+        this.registering.set(false);
+      }
+    });
   }
 
   addToCalendar(): void {
@@ -645,11 +780,26 @@ export class EventDetailComponent implements OnInit {
         this.event.set(event);
         if (event) {
           this.updateMeta(event);
+          // Check if user is registered
+          if (this.isLoggedIn()) {
+            this.checkRegistrationStatus(event.id);
+          }
         }
         this.loading.set(false);
       },
       error: () => {
         this.loading.set(false);
+      }
+    });
+  }
+
+  private checkRegistrationStatus(eventId: string): void {
+    this.eventsService.checkRegistration(eventId).subscribe({
+      next: (response) => {
+        this.isRegistered.set(response.isRegistered);
+      },
+      error: () => {
+        this.isRegistered.set(false);
       }
     });
   }

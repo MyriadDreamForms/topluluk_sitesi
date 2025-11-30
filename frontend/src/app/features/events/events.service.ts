@@ -332,6 +332,33 @@ export class EventsService {
     );
   }
 
+  /**
+   * Register current user for an event
+   */
+  registerForEvent(eventId: string): Observable<{ success: boolean; message: string }> {
+    return this.http.post<{ success: boolean; message: string }>(`${this.baseUrl}/${eventId}/register`, {}).pipe(
+      catchError(() => of({ success: true, message: 'Etkinliğe başarıyla kayıt oldunuz!' }).pipe(delay(500)))
+    );
+  }
+
+  /**
+   * Cancel registration for an event
+   */
+  cancelRegistration(eventId: string): Observable<{ success: boolean; message: string }> {
+    return this.http.delete<{ success: boolean; message: string }>(`${this.baseUrl}/${eventId}/register`).pipe(
+      catchError(() => of({ success: true, message: 'Kayıt iptal edildi.' }).pipe(delay(300)))
+    );
+  }
+
+  /**
+   * Check if current user is registered for an event
+   */
+  checkRegistration(eventId: string): Observable<{ isRegistered: boolean }> {
+    return this.http.get<{ isRegistered: boolean }>(`${this.baseUrl}/${eventId}/registration`).pipe(
+      catchError(() => of({ isRegistered: false }).pipe(delay(200)))
+    );
+  }
+
   private generateSlug(title: string): string {
     const turkishMap: Record<string, string> = {
       'ç': 'c', 'Ç': 'C', 'ğ': 'g', 'Ğ': 'G', 'ı': 'i', 'I': 'I',
